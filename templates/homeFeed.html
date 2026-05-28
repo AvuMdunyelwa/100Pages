@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <section class='w-100 d-flex flex-column align-items-center gap-2' style="border: none;">
+        <div class='greeting' style="display: grid; align-items: end; justify-items: center; margin-top: 1rem;">
+            <h1 style="color: grey; text-align: center; font-weight: 200; font-size: 1.9rem;">Welcome back, <span style="color: white; text-decoration: underline;">{{username}}</span>. Here's what we've been listening...</h1>
+        </div>
+        <!-- popular week gallery -->
+        <section class='music-gallery-section w-100 h-auto p-4'>
+            <h6>Popular songs this week</h6>
+            {% if popular_songs %}
+            <div class="container music-gallery p-0" style="color: white; display: flex; align-items: center; justify-content: center; gap: 1em;">
+                <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(5, 2fr);">
+                {% for song in popular_songs %}
+                <div class="card p-0" style="width: 100%; background-color: transparent; border: none;">
+                    <img src="{{ song.cover_img_url }}" class="card-img-top" alt="..."style='max-width: 100%; height: 35vh;'>
+                    <div class="card-body p-0 pt-1 d-flex gap-1 ">
+                        {% for i in range(song.average_rating | round | int) %}
+                            <img src='static/star-solid.svg' alt='star' style="max-width: 10%;"/>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+            {% else %}
+                <p>No reviews yet. Be the first to add one!</p>
+            {% endif %}
+    </section>
+    </section>
+
+    <section class="card mb-3 w-75 h-75 overflow-hidden" style="justify-self: center; align-self: center;">
+            <div class="row g-0 w-100 h-100">
+                <div class="col-md-4 h-100">
+                    <img src="/static/track2.png" mw-100 mh-100 class="img-fluid rounded-start" alt="song-cover">
+                </div>
+                <aside class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Explore</h5>
+                        <p class="card-text">
+                            If you're eager to dive deeper into the world of sound,
+                            you will find plenty of inspiration and honest feedback.
+                            Our community provides detailed insights on every genre.
+                            To discover your next favorite album or hidden gem,
+                            feel free to explore more <b><a href='/reviews' style="text-decoration: none;">reviews</a></b>.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+     <section class='w-100 p-4 review-list'>
+        <h6>Popular reviews</h6>
+            {% if reviews %}
+                <div class="container-fluid" style="color: white;">
+                    <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
+                        {% for review in reviews %}
+                        <div class="col" id='review' style="display: flex; gap: 1em; padding: 1em; border-bottom: 0.5px solid grey; align-items: flex-start;">
+                            <div class='song-cover' style="background-image: url('{{ review.cover_img_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                            </div>
+                            <aside class='review-body' style="display: flex; flex-direction: column; justify-content: center;">
+                                <h2 class='music-title' style="font-size: 0.9rem; font-weight: 600;">{{ review.song_title }} by {{ review.artist }}</h2>
+                                <h5 class='username'style="margin: 0;" >
+                                    <a href="/user/{{ review.username }}" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
+                                        @{{ review.username }}
+                                    </a>
+                                </h5>
+                                <div class='rating' style="display: flex; gap: 0.2em; padding: 0.5em 0;">
+                                {% for i in range(review.rating) %}
+                                    <img src='static/star-solid.svg' alt='like' style="max-width: 6%;"/>
+                                {% endfor %}
+                                </div>
+                                <p class='comment' style="font-size: 0.9rem; font-style: italic; color: grey;">'{{ review.review_content }}'</p>
+                                <form class='likes-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
+                                    <button id='like-btn' type='submit' style="background: none; cursor: pointer;" >
+                                        {% if review.liked %}
+                                            <img src='static/heart-solid.svg' alt='like'/>
+                                        {% else %}
+                                            <img src='static/heart.svg' alt='like'/>
+                                        {% endif %}
+                                    </button>
+                                    <span class='like-count' style="font-size: 0.8rem; font-weight: 300;"> {{review.total_likes}} likes</span>
+                                    <input type="hidden" name="review_id" value="{{ review.review_id }}"/>
+                                </form>
+                            </aside>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                  <p class='fs-6'>You haven't written any reviews yet.</p>
+                {% endif %}
+    </section>
+{% endblock %}
