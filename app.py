@@ -258,7 +258,7 @@ def like_review():
     return jsonify({"liked": liked, "total_likes": total_likes})
 
 
-@app.route("/delete-review/<int:review_id>", methods=["GET"])
+@app.route("/delete-review/<review_id>", methods=["GET"])
 @login_required
 def delete_review(review_id):
     """ allow users to delete their own reviews """
