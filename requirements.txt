@@ -1,5 +1,5 @@
 cs50
-Flask
+flask
 spotify
 gunicorn
 Flask-Session
