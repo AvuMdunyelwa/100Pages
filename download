@@ -1,7 +1,0 @@
-import requests
-from flask import redirect, render_template, session
-
-#book api
-def bookApi(book):
-    ""look up the book""
-    url = f""
