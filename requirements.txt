@@ -1,6 +1,6 @@
 cs50
 flask
-spotify
+spotipy
 gunicorn
 Flask-Session
 pytz
