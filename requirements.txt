@@ -1,9 +1,9 @@
 cs50
 flask
 spotipy
-psutil
 gunicorn
 Flask-Session
 pytz
 requests
+psutil
 
