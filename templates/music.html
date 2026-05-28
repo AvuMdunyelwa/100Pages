@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <section class='songs-display w-100 mt-5 p-4'>
+
+         {% if error %}
+        <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-50 start-50 translate-middle z-3" role="alert">
+                <strong>{{error}}</strong>
+        </div>
+        {% endif %}
+
+        <h5 class='results mt-5 fs-6 fw-light' style="color: white;">Showing matches for:  <i>{{input}}</i></h5>
+
+        <div class="container-fluid" style="color: white;">
+            {% for track in songs %}
+            <div class="songs row w-80 align-center" style=" justify-content: center; padding: 1em; gap: 1em;">
+                <div class='song-cover p-0' style="
+                    width: 15%; max-height: 100%;
+                    background-image: url('{{track["album"]["images"][1]["url"]}}');
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    border-radius: 5px;
+                    ">
+                </div>
+                <aside class="col align-items-center" id='songs'>
+                    <h4 class="fs-6 fw-semibold">{{track["name"]}} <span class="fs-6">•{{track["album"]["release_date"][0:4]}}</span></h4>
+                    <h5 class="fs-6"><a><small style="font-weight: 400;">artist: </small></a> {{track["artists"][0]["name"]}}</h5>
+                </aside>
+                <div class="dropdown p-0 d-flex h-25 align-self-center" style="width: fit-content; background: transparent">
+                    <button class="btn btn-secondary dropdown p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent; border: none;">
+                        ...
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn" data-bs-toggle="modal"
+                        data-bs-target="#reviewSong" data-bs-id="{{track['id']}}"
+                        data-bs-title="{{track['name']}}" data-bs-artist="{{track['artists'][0]['name']}}"
+                        data-bs-img="{{track['album']['images'][1]['url']}}"
+                        style="border: none;">
+                            review
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <!-- Modal -->
+    <div class="modal fade" id="reviewSong" tabindex="-1" role="dialog" aria-labelledby="reviewSongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form class="modal-content" action="/review" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewSongTitle"></h5>
+                </div>
+                <div class="modal-body m-0 mx-100 d-grid">
+                    <div class="mb-3 w-100 m-0">
+                        <textarea class="form-control w-100" name="review" placeholder="Write your review here..." id="exampleFormControlTextarea1" rows="3" style="border: none; border-bottom: 1px solid grey;"></textarea>
+                    </div>
+                    <div class="mb-3 w-100 m-0">
+                        <input type="number" name="rating" class="form-control w-100" placeholder="Rating (1-5)" id="exampleFormControlInput1" style="border: none; border-bottom: 1px solid grey;" min="1" max="5">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn" style="background-color: #67BAF4; color: white;">Post</button>
+                </div>
+                <input type="hidden" name="id" value='' id="trackId" />
+                <input type="hidden" name="title" value='' id="trackTitle" />
+                <input type="hidden" name="artist" value='' id="trackArtist" />
+                <input type="hidden" name="img" value='' id="trackImg" />
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

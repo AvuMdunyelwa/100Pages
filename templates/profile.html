@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <title> 100Pages | Profile</title>
+     <section class='w-100 mt-5 p-4 review-list'>
+        {% if error %}
+        <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-50 start-50 translate-middle z-3" role="alert">
+                <strong>{{error}}</strong>
+        </div>
+        {% endif %}
+        <div class='greeting' style="display: grid; align-items: end; justify-items: center; padding: 1em 0;">
+            <h1 style="color: grey; text-align: center; font-weight: 200; font-size: 1.9rem;">Welcome back, <span style="color: white; text-decoration: underline;">{{username}}</span>! Here's the collection of reviews you've written...</h1>
+        </div>
+        {% if reviews %}
+                <div class="container-fluid" style="color: white;">
+                    <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
+                        {% for review in reviews %}
+                        <div class="col" id='review' style="display: flex; gap: 1em; padding: 1em; border-bottom: 0.5px solid grey; align-items: flex-start;">
+                            <div class='song-cover' style="background-image: url('{{ review.cover_img_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                            </div>
+                            <aside class='review-body' style="display: flex; flex-direction: column; justify-content: center;">
+                                <h2 class='music-title' style="font-size: 0.9rem; font-weight: 600;">{{ review.song_title }} by {{ review.artist }}</h2>
+
+                                 <div class='rating' style="display: flex; gap: 0.2em; padding: 0.5em 0;">
+                                {% for i in range(review.rating) %}
+                                    <img src="static/star-solid.svg" alt='like' style="max-width: 6%;"/>
+                                {% endfor %}
+                                </div>
+                                <p class='comment' style="font-size: 0.9rem; font-style: italic; color: grey;">'{{ review.review_content }}'</p>
+                                <form class='likes-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
+                                    <button id='likes-btn' type='submit' style="background: none; cursor: pointer;" >
+                                        {% if review.liked %}
+                                            <img src="static/heart-solid.svg" alt='like'/>
+                                        {% else %}
+                                            <img src="static/heart.svg" alt='like'/>
+                                        {% endif %}
+                                    </button>
+                                    <span class='like-count' style="font-size: 0.8rem; font-weight: 300;"> {{review.total_likes}} likes</span>
+                                    <input type="hidden" name="review_id" value="{{ review.review_id }}"/>
+                                </form>
+                            </aside>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent; border: none;">
+                                    ...
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" method="get" data-bs-toggle="modal" data-bs-target="#editReviewModal" data-bs-id="{{review.id}}"
+                                        data-bs-title="{{review.song_title}}" data-bs-artist="{{review.artist}}" data-bs-rating="{{review.rating}}"
+                                        data-bs-content="{{review.review_content}}" style="cursor: pointer;">Edit</a></li>
+                                    <li><a class="dropdown-item" href="/delete-review/{{ review.id }}" method="get">Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <p class='fs-6'>{{username}} haven't written any reviews yet.</p>
+                {% endif %}
+            </section>
+             <!-- Modal -->
+            <div class="modal fade" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form class="modal-content edit-review" action="/edit-review" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                        </div>
+                        <div class="modal-body m-0 mx-100 d-grid">
+                            <div class="mb-3 w-100 m-0">
+                                <textarea class="form-control w-100" name="review" placeholder="Write your review here..." id="content" rows="3" style="border: none; border-bottom: 1px solid grey;"></textarea>
+                            </div>
+                            <div class="mb-3 w-100 m-0">
+                                <input type="number" name="rating" class="form-control w-100" placeholder="Rating (1-5)" id="rating" style="border: none; border-bottom: 1px solid grey;" min="1" max="5" value="">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn" style="background-color: #67BAF4; color: white;">Save</button>
+                        </div>
+                        <input type="hidden" name="review_id" value='' id="reviewId" />
+                        <input type="hidden" name="song_title" value='' id="songTitle" />
+                        <input type="hidden" name="artist" value='' id="artist" />
+                    </form>
+                </div>
+            </div>
+{% endblock %}
