@@ -37,8 +37,11 @@ body {
 
     @media (max-width: 430px) {
         background-color: var(--bg-color) !important;
-        transition: 0.5s ease;
 
+        .navbar-collapse {
+            transition: 0.5s ease;
+        }
+        
         ul {
             align-items: flex-start !important;
         }
