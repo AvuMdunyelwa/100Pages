@@ -33,14 +33,10 @@ body {
     color: var(--primary-color);
     z-index: 10;
     background-color: transparent;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 
     @media (max-width: 430px) {
         background-color: var(--bg-color) !important;
-
-        .navbar-collapse {
-            transition: 0.5s ease;
-        }
         
         ul {
             align-items: flex-start !important;
