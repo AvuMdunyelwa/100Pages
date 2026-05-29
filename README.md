@@ -1,6 +1,6 @@
 # 🎵 100Pages — A Social Music Review Web App
 
-youtube url: https://youtu.be/29VIxXx_GSw?si=Vlu8Mt4dBfEDegicC
+website url: https://one00pages-o956.onrender.com
 
 100Pages is a full-stack web application that lets users discover, review, and rate songs. Built with Python (Flask) on the backend and a SQLite database, the app allows anyone to browse popular reviews and trending songs — but unlocks the full social experience (writing reviews, liking others' reviews, and managing a personal profile) once they register and log in. Think of it as a Letterboxd, but for music: a community-driven space where listeners can share their takes on tracks, discover what others are enjoying, and build a personal catalogue of their musical opinions.
 
