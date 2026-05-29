@@ -37,7 +37,7 @@ body {
 
     @media (max-width: 430px) {
         background-color: var(--bg-color) !important;
-        transition: 0.5s ease-in-out;
+        transition: 0.5s ease;
 
         ul {
             align-items: flex-start !important;
