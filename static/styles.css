@@ -54,7 +54,7 @@ form {
     margin-left: 1rem;
     display: inline-flex;
     gap: 1em;
-    transition: 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 .alert button {
