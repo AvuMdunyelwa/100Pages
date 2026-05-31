@@ -3,10 +3,10 @@
 {% block content %}
   <title>Register | 100Pages</title>
   <div style='height: 100vh;' class='d-grid align-items-center'>
-   {% if error %}
+   {% if message %}
    <div style="height: 100vh; width: 100vw;">
        <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-20 start-50 translate-middle" role="alert">
-               <strong>{{error}}</strong>
+               <strong>{{message}}</strong>
        </div>
     </div>
     {% endif %}
