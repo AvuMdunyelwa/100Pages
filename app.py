@@ -11,7 +11,7 @@ from api import search_for_song
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///music.db")
+db = SQL("sqlite:////mnt/data/music.db")
 #creating a news_letter table in the db
 db.execute('CREATE TABLE IF NOT EXISTS newsletter ( id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, email TEXT NOT NULL UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))')
 
