@@ -50,6 +50,12 @@ body {
     }
 }
 
+@media (max-width: 430px) {
+    #logo {
+        width: 20%;
+    }
+}
+
 form {
     margin-left: 1rem;
     display: inline-flex;
