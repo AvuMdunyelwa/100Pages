@@ -221,7 +221,7 @@ section {
             padding-top: 0.2em !important;
 
             img {
-                max-width: 12% !important;
+                max-width: 2dvh !important;
                 height: 100% !important;
                 object-fit: cover !important;
             }
