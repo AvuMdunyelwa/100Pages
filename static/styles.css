@@ -334,12 +334,16 @@ section {
     }
 }
 
+
 .songs {
     height: 20vh;
     
     @media (max-width: 430px) {
         height: 15dvh !important;
-        width: 100% !important;
+
+        .row {
+            width: 100% !important;
+        }
     }
     .song-cover {
             background-image: url('/static/song-covers/track1.png');
