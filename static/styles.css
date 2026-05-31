@@ -336,7 +336,10 @@ section {
 
 .songs {
     height: 20vh;
-
+    
+    @media (max-width: 430px) {
+        height: 15dvh;
+    }
     .song-cover {
             background-image: url('/static/song-covers/track1.png');
         }
@@ -347,7 +350,7 @@ section {
 
         @media (max-width: 430px) {
             padding: 1em 0 !important;
-            height: 15vh !important;
+            height: 16dvh !important;
 
             h4,
             span {
