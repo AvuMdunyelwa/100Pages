@@ -9,6 +9,12 @@ from datetime import datetime, date
 from help import login_required
 from api import search_for_song
 
+# create the directory if it doesn't exist
+os.makedirs("/mnt/data", exist_ok=True)
+
+# create empty db file if it doesn't exist
+if not os.path.exists("/mnt/data/music.db"):
+    open("/mnt/data/music.db", "w").close()
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:////mnt/data/music.db")
