@@ -71,10 +71,10 @@ def logout():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     """ Log user in """
-
+    # get message
+    message = request.args.get('message') 
     # forget user id
     session.clear()
-    error = None
 
     if request.method == 'POST':
         # get user login details
@@ -353,7 +353,7 @@ def validate_user():
     # user email not found in the db
     if not user_info:
         error = 'No user exists with that email'
-        return render_template("resetPassword.html", emailConfirmed=False, error=error)
+        return render_template("resetPassword.html", emailConfirmed=False, message=error)
 
     # user email found in the db
     return render_template("resetPassword.html", emailConfirmed=True, user_id=user_info[0]['id'])
@@ -368,19 +368,19 @@ def reset_Password():
 
     if not new_password:
         error = 'invalid password'
-        return render_template("resetPassword.html", emailConfirmed=True, error=error)
+        return render_template("resetPassword.html", emailConfirmed=True, message=error)
 
     if not new_password == password_confirmation:
         error = 'password do not match'
-        return render_template("resetPassword.html", emailConfirmed=True, error=error)
+        return render_template("resetPassword.html", emailConfirmed=True, message=error)
 
     #hash password
     hashed_password = generate_password_hash(new_password)
 
     # update password in the db
     db.execute('UPDATE users SET password_hash=? WHERE id=?', hashed_password, user_id)
-
-    return redirect('/login')
+    message = 'Password reset successful'
+    return redirect(f'/login?message={message}')
 
 
 @app.route('/newsLetter', methods=["POST"])
@@ -397,4 +397,4 @@ def subscribe():
     # store email to database
     db.execute('INSERT INTO newsletter(user_id, email) VALUES(?,?)', user_id, email)
     message = 'Thank you for subscribing to the newsletter'
-    return redirect(f'/?message=message')
+    return redirect(f'/?message={message}')
