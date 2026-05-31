@@ -349,7 +349,6 @@ section {
         }
 
         @media (max-width: 430px) {
-            padding: 1em 0 !important;
             height: 16dvh !important;
 
             h4,
