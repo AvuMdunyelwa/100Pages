@@ -341,7 +341,6 @@ section {
     @media (max-width: 430px) {
         height: 15dvh !important;
         padding: 0.2em !important;
-        width: 100% !important;
     }
     .song-cover {
             background-image: url('/static/song-covers/track1.png');
