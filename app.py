@@ -12,6 +12,8 @@ from api import search_for_song
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///music.db")
+#creating a news_letter table in the db
+db.execute('CREATE TABLE IF NOT EXISTS newsletter ( id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, email TEXT NOT NULL UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))')
 
 # Configure application
 app = Flask(__name__)
@@ -32,7 +34,7 @@ def after_request(response):
 
 @app.route('/')
 def landing_page():
-
+    message = request.args.get('message')
     # popular songs based on average rating
     popular_songs = db.execute('SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews WHERE reviews.created_at >= date("now", "-30 days") GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5')
     # popular reviews based on likes
@@ -49,7 +51,7 @@ def landing_page():
             else:
                 review["liked"] = False
 
-        return render_template('homeFeed.html', username=username[0]['username'], reviews=reviews, popular_songs=popular_songs)
+        return render_template('homeFeed.html', username=username[0]['username'], reviews=reviews, popular_songs=popular_songs, message=message)
 
     return render_template('index.html', reviews=reviews, popular_songs=popular_songs)
 
@@ -82,10 +84,10 @@ def login():
         # ensure username and password was submitted
         if not username:
             error = 'Enter valid username'
-            return render_template("login.html", error=error)
+            return render_template("login.html", message=error)
         elif not password:
             error = 'Enter valid password'
-            return render_template("login.html", error=error)
+            return render_template("login.html", message=error)
 
         rows = db.execute(
             "SELECT * FROM users WHERE username = ?", username
@@ -96,7 +98,7 @@ def login():
             rows[0]["password_hash"], password
         ):
             error = 'invalid username and/or password'
-            return render_template("login.html", error=error)
+            return render_template("login.html", message=error)
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -123,22 +125,22 @@ def register():
 
         if not username:
             error = 'invalid username'
-            return render_template("register.html", error=error)
+            return render_template("register.html", message=error)
 
         if not email:
             error = 'invalid email'
-            return render_template("register.html", error=error)
+            return render_template("register.html", message=error)
 
         if not password or password != confirmation:
             error = 'invalid password do not match'
-            return render_template("register.html", error=error)
+            return render_template("register.html", message=error)
         try:
             db.execute('INSERT INTO users (username, email, password_hash) VALUES(?,?,?)',
                        username, email, generate_password_hash(password))
             return redirect('/login')
         except ValueError:
             error = 'Username already exists'
-            return render_template("register.html", error=error)
+            return render_template("register.html", message=error)
 
     else:
         return render_template('register.html')
@@ -181,15 +183,15 @@ def store_review():
 
     if not rating or int(rating) < 1 or int(rating) > 5:
         error = 'Please provide a valid rating (1-5)'
-        return render_template("music.html", error=error)
+        return render_template("music.html", message=error)
 
     if not track_id or not track_title or not track_artist or not track_img:
         error = 'Invalid track information. Please try again.'
-        return render_template("music.html", error=error)
+        return render_template("music.html", message=error)
 
     if not review:
         error = 'Please provide a review.'
-        return render_template("music.html", error=error)
+        return render_template("music.html", message=error)
 
     db.execute('INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(?,?,?,?,?,?,?)',
                user_id, track_id, track_title, track_artist, track_img, review, rating)
@@ -291,20 +293,20 @@ def edit_review():
     review = db.execute('SELECT * FROM reviews WHERE id=? AND user_id=?', int(review_id), user_id)
     if not review:
         error = "Review not found or does not belong to user"
-        return redirect("/account", error=error)
+        return redirect("/account", message=error)
 
     if not rating or rating < 1 or rating > 5:
         error = 'Please provide a valid rating (1-5)'
-        return redirect("/account", error=error)
+        return redirect("/account", message=error)
 
     if not review_content:
         error = 'Please provide a review.'
-        return redirect("/account", error=error)
+        return redirect("/account", message=error)
 
     # update the review in the database
     db.execute('UPDATE reviews SET review_content=?, rating=? WHERE id=?', review_content, rating, review_id)
-
-    return redirect("/account")
+    message = 'Review added'
+    return redirect(f"/account?message={message}")
 
 
 @app.route("/user/<username>", methods=["GET"])
@@ -380,3 +382,19 @@ def reset_Password():
 
     return redirect('/login')
 
+
+@app.route('/newsLetter', methods=["POST"])
+@login.required
+def subscribe():
+    """ add user to monthly newsletter """
+    email = request.form.get('email')
+    user_id = session['user_id']
+    
+    if not email:
+        error = 'Please provide a valid email'
+        return redirect(f'/?message={error}')
+
+    # store email to database
+    db.execute('INSERT INTO newsletter(user_id, email) VALUES(?,?)', user_id, email)
+    message = 'Thank you for subscribing to the newsletter'
+    return redirect(f'/?message=message')
