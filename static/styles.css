@@ -350,7 +350,7 @@ section {
 
         @media (max-width: 430px) {
             height: 16dvh !important;
-            width: 20% !important;
+            width: 20vw !important;
 
             h4,
             span {
