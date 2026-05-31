@@ -384,7 +384,7 @@ def reset_Password():
 
 
 @app.route('/newsLetter', methods=["POST"])
-@login.required
+@login_required
 def subscribe():
     """ add user to monthly newsletter """
     email = request.form.get('email')
