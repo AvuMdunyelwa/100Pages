@@ -195,7 +195,7 @@ section {
             width: 100%;
             overflow-x: auto;
             white-space: nowrap;
-            min-height: 20dvh !important;
+            min-height: 21dvh !important;
         }
     }
 
@@ -203,7 +203,7 @@ section {
         @media (max-width: 430px) {
             display: inline-block;
             max-width: 100% !important;
-            height: 16dvh !important;
+            height: 18dvh !important;
         }
     }
 
