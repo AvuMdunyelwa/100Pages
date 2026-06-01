@@ -124,9 +124,15 @@ def register():
         confirmation = request.form.get('confirmation')
         email = request.form.get('email')
         username = request.form.get('username')
+        name = request.form.get('name')
+        surname = request.form.get('surname')
 
         if not username:
             error = 'invalid username'
+            return render_template("register.html", message=error)
+        
+        if not name or surname:
+            error = 'invalid name or/and surname'
             return render_template("register.html", message=error)
 
         if not email:
@@ -137,8 +143,8 @@ def register():
             error = 'invalid password do not match'
             return render_template("register.html", message=error)
         try:
-            db.execute('INSERT INTO users (username, email, password_hash) VALUES(?,?,?)',
-                       username, email, generate_password_hash(password))
+            db.execute('INSERT INTO users (username, name, surname email, password_hash) VALUES(?,?,?,?,?)',
+                       username, name, surname, email, generate_password_hash(password))
             return redirect('/login')
         except ValueError:
             error = 'Username already exists'
