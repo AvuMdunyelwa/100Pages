@@ -16,6 +16,7 @@ if not os.path.exists("/mnt/data/music.db"):
 
 # Configure CS50 Library to use SQLite database
 db = SQL(os.environ.get("DATABASE_URL"))
+print("DATABASE_URL:", os.environ.get("DATABASE_URL"))
 #creating a news_letter table in the db
 db.execute('CREATE TABLE IF NOT EXISTS newsletter ( id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, email TEXT NOT NULL UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))')
 
