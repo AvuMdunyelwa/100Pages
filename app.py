@@ -34,7 +34,7 @@ def after_request(response):
 def landing_page():
     message = request.args.get('message')
     # popular songs based on average rating
-    popular_songs = db.execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews WHERE reviews.created_at >= NOW() - INTERVAL '30 days' GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
+    popular_songs = db.execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
     # popular reviews based on likes
     reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10')
 
