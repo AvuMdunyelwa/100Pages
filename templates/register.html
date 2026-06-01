@@ -32,16 +32,16 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <div style="width: 100%; background-color: white; display: flex; align-items: center; border: 1px solid lightgrey; padding: 0.2em; border-radius: 5px;">
-                    <input type="password" class="form-control h-50" autocomplete='off' name="password" id="password-field" placeholder="Enter password" style="background: none; border: none;">
+                <div style="width: 100%; background-color: white; display: flex; align-items: center; border: 1px solid lightgrey; padding: 0.2em; border-radius: 5px;" id="password-wrapper">
+                    <input type="password" class="form-control h-50" autocomplete='off' name="password" id="password-field" placeholder="Enter password" style="background: none; border: none; outline: none; box-shadow: none;">
                     <span class="eye-icon" id="toggle-password" style="cursor: pointer;"><img src="static/eye-closed.svg" class="img-fluid" /></span>
                 </div>
             </div>
             <div class="form-group">
-                <label for="confirm-password">Password (again)</label>
-                <div style="width: 100%; background-color: white; display: flex; align-items: center; border: 1px solid lightgrey; padding: 0.2em; border-radius: 5px;">
-                    <input type="password" class="form-control h-50" autocomplete='off' name="confirmation" id="confirm-password" placeholder="Enter password" style="background: none; border: none;">
-                    <span class="eye-icon-again" id="confirm-password-toggle" style="cursor: pointer;"><img src="static/eye-closed.svg" class="img-fluid" /></span>
+                <label for="password-field">Password</label>
+                <div style="width: 100%; background-color: white; display: flex; align-items: center; border: 1px solid lightgrey; padding: 0.2em; border-radius: 5px;" id="password-wrapper">
+                    <input type="password" class="form-control h-50" autocomplete='off' name="password" id="password-field" placeholder="Enter password" style="background: none; border: none; outline: none; box-shadow: none;">
+                    <span class="eye-icon" id="toggle-password" style="cursor: pointer;"><img src="static/eye-closed.svg" class="img-fluid" /></span>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary h-75 w-25 align-self-end" style="background-color: #0077B6;">SIGN UP</button>
