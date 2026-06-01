@@ -1,7 +1,8 @@
 import os
+import psycopg2
+import psycopg2.extras
 from flask import *
-from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, jsonify
+from flask import Flask, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, date
@@ -9,9 +10,21 @@ from help import login_required
 from api import search_for_song
 
 
-# Configure CS50 Library to use SQLite database
-print("DATABASE_URL:", os.environ.get("DATABASE_URL"))
-db = SQL(os.environ.get("DATABASE_URL"))
+# Database helper — replaces CS50 SQL
+def db_execute(query, **params):
+    conn = psycopg2.connect(os.environ.get("DATABASE_URL"), sslmode='require')
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(query, params)
+    try:
+        rows = cur.fetchall()
+        result = [dict(row) for row in rows]
+    except psycopg2.ProgrammingError:
+        result = []
+    cur.close()
+    conn.close()
+    return result
+
 
 # Configure application
 app = Flask(__name__)
@@ -33,22 +46,15 @@ def after_request(response):
 @app.route('/')
 def landing_page():
     message = request.args.get('message')
-    # popular songs based on average rating
-    popular_songs = db.execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
-    # popular reviews based on likes
-    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10')
+    popular_songs = db_execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10")
 
     if session.get('user_id'):
         user_id = session['user_id']
-        username = db.execute('SELECT username FROM users WHERE id=:id', id=user_id)
-
+        username = db_execute("SELECT username FROM users WHERE id=%(id)s", id=user_id)
         for review in reviews:
-            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["review_id"])
-            if existing_likes:
-                review["liked"] = True
-            else:
-                review["liked"] = False
-
+            existing_likes = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=session["user_id"], rid=review["review_id"])
+            review["liked"] = bool(existing_likes)
         return render_template('homeFeed.html', username=username[0]['username'], reviews=reviews, popular_songs=popular_songs, message=message)
 
     return render_template('index.html', reviews=reviews, popular_songs=popular_songs)
@@ -57,65 +63,38 @@ def landing_page():
 @app.route("/logout")
 @login_required
 def logout():
-    """Log user out"""
-
-    # Forget any user_id
     session.clear()
-
-    # Redirect user to login form
     return redirect("/")
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    """ Log user in """
-    # get message
     message = request.args.get('message')
-    # forget user id
     session.clear()
 
     if request.method == 'POST':
-        # get user login details
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # ensure username and password was submitted
         if not username:
-            error = 'Enter valid username'
-            return render_template("login.html", message=error)
+            return render_template("login.html", message='Enter valid username')
         elif not password:
-            error = 'Enter valid password'
-            return render_template("login.html", message=error)
+            return render_template("login.html", message='Enter valid password')
 
-        rows = db.execute(
-            "SELECT * FROM users WHERE username = :username", username=username
-        )
+        rows = db_execute("SELECT * FROM users WHERE username=%(username)s", username=username)
 
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(
-            rows[0]["password_hash"], password
-        ):
-            error = 'invalid username and/or password'
-            return render_template("login.html", message=error)
+        if len(rows) != 1 or not check_password_hash(rows[0]["password_hash"], password):
+            return render_template("login.html", message='Invalid username and/or password')
 
-        # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
         return redirect(url_for("landing_page"))
-
-    # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("login.html")
+        return render_template("login.html", message=message)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
-    error = None
     if request.method == 'POST':
-
-        # check if password and username are valid
         password = request.form.get('password')
         confirmation = request.form.get('confirmation')
         email = request.form.get('email')
@@ -124,61 +103,46 @@ def register():
         surname = request.form.get('surname')
 
         if not username:
-            error = 'invalid username'
-            return render_template("register.html", message=error)
-
+            return render_template("register.html", message='Invalid username')
         if not name or not surname:
-            error = 'invalid name or/and surname'
-            return render_template("register.html", message=error)
-
+            return render_template("register.html", message='Invalid name or surname')
         if not email:
-            error = 'invalid email'
-            return render_template("register.html", message=error)
-
+            return render_template("register.html", message='Invalid email')
         if not password or password != confirmation:
-            error = 'invalid password do not match'
-            return render_template("register.html", message=error)
+            return render_template("register.html", message='Passwords do not match')
+
         try:
-            db.execute('INSERT INTO users (username, name, surname, email, password_hash) VALUES(:username, :name, :surname, :email, :password_hash)',
+            db_execute("INSERT INTO users (username, name, surname, email, password_hash) VALUES(%(username)s, %(name)s, %(surname)s, %(email)s, %(password_hash)s)",
                        username=username, name=name, surname=surname, email=email, password_hash=generate_password_hash(password))
             return redirect('/login')
-        except ValueError:
-            error = 'Username already exists'
-            return render_template("register.html", message=error)
-
+        except Exception:
+            return render_template("register.html", message='Username or email already exists')
     else:
         return render_template('register.html')
 
+
 @app.route("/song", methods=["POST"])
 def find_track():
-    """ get search results """
-
     song = request.form.get("song")
     artist = request.form.get("artist")
 
     if not song:
-        error = "Please enter a song title"
-        return render_template("music.html", message=error)
+        return render_template("music.html", message="Please enter a song title")
 
     songs = search_for_song(song, artist)
 
     if not songs:
-        error = f"no results found for: {song}"
-        return render_template("music.html", message=error)
+        return render_template("music.html", message=f"No results found for: {song}")
+
     try:
-        # display song details
         return render_template("music.html", songs=songs, input=song)
     except ValueError:
-        # no song found
-        error = f"no results found for: {song}"
-        return render_template("music.html", message=error)
+        return render_template("music.html", message=f"No results found for: {song}")
 
 
 @app.route("/review", methods=["POST"])
 @login_required
 def store_review():
-    """ store the review data to the database """
-
     user_id = session["user_id"]
     track_id = request.form.get("id")
     track_title = request.form.get("title")
@@ -188,18 +152,13 @@ def store_review():
     rating = request.form.get("rating")
 
     if not rating or int(rating) < 1 or int(rating) > 5:
-        error = 'Please provide a valid rating (1-5)'
-        return render_template("music.html", message=error)
-
+        return render_template("music.html", message='Please provide a valid rating (1-5)')
     if not track_id or not track_title or not track_artist or not track_img:
-        error = 'Invalid track information. Please try again.'
-        return render_template("music.html", message=error)
-
+        return render_template("music.html", message='Invalid track information. Please try again.')
     if not review:
-        error = 'Please provide a review.'
-        return render_template("music.html", message=error)
+        return render_template("music.html", message='Please provide a review.')
 
-    db.execute('INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(:user_id, :track_id, :song_title, :artist, :cover_img_url, :review_content, :rating)',
+    db_execute("INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(%(user_id)s, %(track_id)s, %(song_title)s, %(artist)s, %(cover_img_url)s, %(review_content)s, %(rating)s)",
                user_id=user_id, track_id=track_id, song_title=track_title, artist=track_artist, cover_img_url=track_img, review_content=review, rating=rating)
 
     return redirect('/account')
@@ -208,32 +167,25 @@ def store_review():
 @app.route("/account", methods=["GET"])
 @login_required
 def profile():
-    """ show the user's profile page with their reviews """
-
     user_id = session["user_id"]
-    username = db.execute('SELECT username FROM users WHERE id=:id', id=user_id)
-    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = :user_id GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user_id=user_id)
+    username = db_execute("SELECT username FROM users WHERE id=%(id)s", id=user_id)
+    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id=%(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist", user_id=user_id)
     return render_template("profile.html", username=username[0]['username'], reviews=reviews)
+
 
 @app.route("/reviews", methods=["GET"])
 def reviews():
-    """ show all reviews """
-
-    # popular songs based on average rating
-    popular_songs = db.execute('SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5')
-
-    # popular reviews based on likes
-    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY created_at DESC LIMIT 10')
+    popular_songs = db_execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY created_at DESC LIMIT 10")
 
     for review in reviews:
         if session.get('user_id'):
-            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["review_id"])
+            existing_likes = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=session["user_id"], rid=review["review_id"])
             review["liked"] = bool(existing_likes)
         else:
             review["liked"] = False
 
-    # top reviewers
-    top_reviewers = db.execute('SELECT username, COUNT(reviews.id) AS review_count FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5')
+    top_reviewers = db_execute("SELECT username, COUNT(reviews.id) AS review_count FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5")
 
     return render_template("reviews.html", reviews=reviews, popular_songs=popular_songs, top_reviewers=top_reviewers)
 
@@ -241,26 +193,21 @@ def reviews():
 @app.route("/likes", methods=["POST"])
 @login_required
 def like_review():
-    """ allow users to like a review """
-
     review_id = int(request.form.get("review_id"))
     user_id = session["user_id"]
 
     if not review_id:
         return redirect("/reviews")
 
-    # check if the user has already liked the review
-    existing_like = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=user_id, rid=review_id)
+    existing_like = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
     if existing_like:
-        # unlike the review
-        db.execute('DELETE FROM likes WHERE user_id=:uid AND review_id=:rid', uid=user_id, rid=review_id)
+        db_execute("DELETE FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
         liked = False
     else:
-        # like the review
-        db.execute('INSERT INTO likes (user_id, review_id) VALUES(:user_id, :review_id)', user_id=user_id, review_id=review_id)
+        db_execute("INSERT INTO likes (user_id, review_id) VALUES(%(user_id)s, %(review_id)s)", user_id=user_id, review_id=review_id)
         liked = True
 
-    results = db.execute('SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=:rid', rid=review_id)
+    results = db_execute("SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=%(rid)s", rid=review_id)
     total_likes = results[0]['total_likes']
 
     return jsonify({"liked": liked, "total_likes": total_likes})
@@ -269,132 +216,96 @@ def like_review():
 @app.route("/delete-review/<int:review_id>", methods=["GET"])
 @login_required
 def delete_review(review_id):
-    """ allow users to delete their own reviews """
-
     user_id = session.get('user_id')
-
-    # check if the review exists and belongs to the current user
-    review = db.execute('SELECT * FROM reviews WHERE id=:id AND user_id=:user_id', id=review_id, user_id=user_id)
+    review = db_execute("SELECT * FROM reviews WHERE id=%(id)s AND user_id=%(user_id)s", id=review_id, user_id=user_id)
 
     if not review:
         return redirect("/account")
 
-    # delete the review
-    db.execute('DELETE FROM reviews WHERE id=:id', id=review_id)
-
+    db_execute("DELETE FROM reviews WHERE id=%(id)s", id=review_id)
     return redirect("/account")
+
 
 @app.route("/edit-review", methods=["POST"])
 @login_required
 def edit_review():
-    """ allow users to edit their own reviews """
-
     user_id = session["user_id"]
     review_id = request.form.get("review_id")
     review_content = request.form.get("review")
     rating = int(request.form.get("rating"))
 
-    # check if the review exists and belongs to the current user
-    review = db.execute('SELECT * FROM reviews WHERE id=:id AND user_id=:user_id', id=int(review_id), user_id=user_id)
+    review = db_execute("SELECT * FROM reviews WHERE id=%(id)s AND user_id=%(user_id)s", id=int(review_id), user_id=user_id)
     if not review:
         return redirect("/account")
-
     if not rating or rating < 1 or rating > 5:
         return redirect("/account")
-
     if not review_content:
         return redirect("/account")
 
-    # update the review in the database
-    db.execute('UPDATE reviews SET review_content=:review_content, rating=:rating WHERE id=:id', review_content=review_content, rating=rating, id=review_id)
-    message = 'Review updated'
-    return redirect(f"/account?message={message}")
+    db_execute("UPDATE reviews SET review_content=%(review_content)s, rating=%(rating)s WHERE id=%(id)s", review_content=review_content, rating=rating, id=review_id)
+    return redirect("/account?message=Review updated")
 
 
 @app.route("/user/<username>", methods=["GET"])
 def other_user_profile(username):
-    """ show a user's profile """
-
-    # get the user's information
-    user = db.execute('SELECT id, username FROM users WHERE username=:username', username=username)
+    user = db_execute("SELECT id, username FROM users WHERE username=%(username)s", username=username)
     if not user:
         return redirect("/")
 
-    # if current user
     if session.get('user_id') == user[0]['id']:
         return redirect('/account')
 
-    # get the user's reviews
-    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = :user_id GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user_id=user[0]['id'])
+    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id=%(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist", user_id=user[0]['id'])
     for review in reviews:
         if session.get('user_id'):
-            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["id"])
+            existing_likes = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=session["user_id"], rid=review["id"])
             review["liked"] = bool(existing_likes)
         else:
             review["liked"] = False
 
     return render_template("usersProfile.html", username=user[0]['username'], reviews=reviews)
 
+
 @app.route('/forgot_password', methods=["GET"])
 def forgot_password():
-    """ direct user to the validate user email page """
-
     return render_template("resetPassword.html", emailConfirmed=False)
+
 
 @app.route('/validateUseremail', methods=["POST"])
 def validate_user():
-    """ direct user to the reset password page """
-
     email = request.form.get('email')
+    user_info = db_execute("SELECT * FROM users WHERE email=%(email)s", email=email)
 
-    # get user details
-    user_info = db.execute('SELECT * FROM users WHERE email=:email', email=email)
-
-    # user email not found in the db
     if not user_info:
-        error = 'No user exists with that email'
-        return render_template("resetPassword.html", emailConfirmed=False, message=error)
+        return render_template("resetPassword.html", emailConfirmed=False, message='No user exists with that email')
 
-    # user email found in the db
     return render_template("resetPassword.html", emailConfirmed=True, user_id=user_info[0]['id'])
 
 
 @app.route('/resetPassword', methods=["POST"])
 def reset_Password():
-    """ reset password """
     new_password = request.form.get('password')
     password_confirmation = request.form.get('confirmation')
     user_id = request.form.get('user_id')
 
     if not new_password:
-        error = 'invalid password'
-        return render_template("resetPassword.html", emailConfirmed=True, message=error)
+        return render_template("resetPassword.html", emailConfirmed=True, message='Invalid password')
+    if new_password != password_confirmation:
+        return render_template("resetPassword.html", emailConfirmed=True, message='Passwords do not match')
 
-    if not new_password == password_confirmation:
-        error = 'password do not match'
-        return render_template("resetPassword.html", emailConfirmed=True, message=error)
-
-    # hash password
     hashed_password = generate_password_hash(new_password)
-
-    # update password in the db
-    db.execute('UPDATE users SET password_hash=:password_hash WHERE id=:id', password_hash=hashed_password, id=user_id)
-    message = 'Password reset successful'
-    return redirect(f'/login?message={message}')
+    db_execute("UPDATE users SET password_hash=%(password_hash)s WHERE id=%(id)s", password_hash=hashed_password, id=user_id)
+    return redirect('/login?message=Password reset successful')
 
 
 @app.route('/newsLetter', methods=["POST"])
 @login_required
 def subscribe():
-    """ add user to monthly newsletter """
     email = request.form.get('email')
     user_id = session['user_id']
 
     if not email:
-        error = 'Please provide a valid email'
-        return redirect(f'/?message={error}')
+        return redirect('/?message=Please provide a valid email')
 
-    # store email to database
-    db.execute('INSERT INTO newsletter(user_id, email) VALUES(:user_id, :email)', user_id=user_id, email=email)
-    message = 'Thank you for subscribing to the newsletter'
-    return redirect(f'/?message={message}')
+    db_execute("INSERT INTO newsletter(user_id, email) VALUES(%(user_id)s, %(email)s)", user_id=user_id, email=email)
+    return redirect('/?message=Thank you for subscribing to the newsletter')
