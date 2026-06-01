@@ -10,13 +10,10 @@ from help import login_required
 from api import search_for_song
 
 
-# create empty db file if it doesn't exist
-if not os.path.exists("/mnt/data/music.db"):
-    open("/mnt/data/music.db", "w").close()
-
 # Configure CS50 Library to use SQLite database
-db = SQL(os.environ.get("DATABASE_URL"))
 print("DATABASE_URL:", os.environ.get("DATABASE_URL"))
+db = SQL(os.environ.get("DATABASE_URL"))
+
 #creating a news_letter table in the db
 db.execute('CREATE TABLE IF NOT EXISTS newsletter ( id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, email TEXT NOT NULL UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))')
 
