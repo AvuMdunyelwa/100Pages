@@ -14,9 +14,6 @@ from api import search_for_song
 print("DATABASE_URL:", os.environ.get("DATABASE_URL"))
 db = SQL(os.environ.get("DATABASE_URL"))
 
-#creating a news_letter table in the db
-db.execute('CREATE TABLE IF NOT EXISTS newsletter ( id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, email TEXT NOT NULL UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))')
-
 # Configure application
 app = Flask(__name__)
 
@@ -143,7 +140,7 @@ def register():
             error = 'invalid password do not match'
             return render_template("register.html", message=error)
         try:
-            db.execute('INSERT INTO users (username, name, surname email, password_hash) VALUES(?,?,?,?,?)',
+            db.execute('INSERT INTO users (username, name, surname, email, password_hash) VALUES(?,?,?,?,?)',
                        username, name, surname, email, generate_password_hash(password))
             return redirect('/login')
         except ValueError:
