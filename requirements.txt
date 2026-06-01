@@ -5,6 +5,7 @@ Flask-Session
 gunicorn
 psutil
 pytz
+psycopg2-binary
 requests
 spotipy
 
