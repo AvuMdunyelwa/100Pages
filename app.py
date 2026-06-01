@@ -3,7 +3,6 @@ from flask import *
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
-from psutil import users
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, date
 from help import login_required
@@ -35,16 +34,16 @@ def after_request(response):
 def landing_page():
     message = request.args.get('message')
     # popular songs based on average rating
-    popular_songs = db.execute('SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews WHERE reviews.created_at >= date("now", "-30 days") GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5')
+    popular_songs = db.execute("SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews WHERE reviews.created_at >= NOW() - INTERVAL '30 days' GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
     # popular reviews based on likes
-    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id ORDER BY total_likes DESC LIMIT 10')
+    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10')
 
     if session.get('user_id'):
         user_id = session['user_id']
-        username = db.execute('SELECT username FROM users WHERE id=?', user_id)
+        username = db.execute('SELECT username FROM users WHERE id=:id', id=user_id)
 
         for review in reviews:
-            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=? AND review_id=?', session["user_id"], review["review_id"])
+            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["review_id"])
             if existing_likes:
                 review["liked"] = True
             else:
@@ -71,7 +70,7 @@ def logout():
 def login():
     """ Log user in """
     # get message
-    message = request.args.get('message') 
+    message = request.args.get('message')
     # forget user id
     session.clear()
 
@@ -89,7 +88,7 @@ def login():
             return render_template("login.html", message=error)
 
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", username
+            "SELECT * FROM users WHERE username = :username", username=username
         )
 
         # Ensure username exists and password is correct
@@ -127,8 +126,8 @@ def register():
         if not username:
             error = 'invalid username'
             return render_template("register.html", message=error)
-        
-        if not name or surname:
+
+        if not name or not surname:
             error = 'invalid name or/and surname'
             return render_template("register.html", message=error)
 
@@ -140,8 +139,8 @@ def register():
             error = 'invalid password do not match'
             return render_template("register.html", message=error)
         try:
-            db.execute('INSERT INTO users (username, name, surname, email, password_hash) VALUES(?,?,?,?,?)',
-                       username, name, surname, email, generate_password_hash(password))
+            db.execute('INSERT INTO users (username, name, surname, email, password_hash) VALUES(:username, :name, :surname, :email, :password_hash)',
+                       username=username, name=name, surname=surname, email=email, password_hash=generate_password_hash(password))
             return redirect('/login')
         except ValueError:
             error = 'Username already exists'
@@ -161,7 +160,7 @@ def find_track():
         error = "Please enter a song title"
         return render_template("music.html", message=error)
 
-    songs = search_for_song(song,artist)
+    songs = search_for_song(song, artist)
 
     if not songs:
         error = f"no results found for: {song}"
@@ -188,7 +187,6 @@ def store_review():
     review = request.form.get("review")
     rating = request.form.get("rating")
 
-
     if not rating or int(rating) < 1 or int(rating) > 5:
         error = 'Please provide a valid rating (1-5)'
         return render_template("music.html", message=error)
@@ -201,8 +199,8 @@ def store_review():
         error = 'Please provide a review.'
         return render_template("music.html", message=error)
 
-    db.execute('INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(?,?,?,?,?,?,?)',
-               user_id, track_id, track_title, track_artist, track_img, review, rating)
+    db.execute('INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(:user_id, :track_id, :song_title, :artist, :cover_img_url, :review_content, :rating)',
+               user_id=user_id, track_id=track_id, song_title=track_title, artist=track_artist, cover_img_url=track_img, review_content=review, rating=rating)
 
     return redirect('/account')
 
@@ -213,8 +211,8 @@ def profile():
     """ show the user's profile page with their reviews """
 
     user_id = session["user_id"]
-    username = db.execute('SELECT username FROM users WHERE id=?', user_id)
-    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = ? GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user_id)
+    username = db.execute('SELECT username FROM users WHERE id=:id', id=user_id)
+    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = :user_id GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user_id=user_id)
     return render_template("profile.html", username=username[0]['username'], reviews=reviews)
 
 @app.route("/reviews", methods=["GET"])
@@ -225,16 +223,17 @@ def reviews():
     popular_songs = db.execute('SELECT cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5')
 
     # popular reviews based on likes
-    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id ORDER BY created_at DESC LIMIT 10')
+    reviews = db.execute('SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY created_at DESC LIMIT 10')
+
     for review in reviews:
-        existing_likes = db.execute('SELECT * FROM likes WHERE user_id=? AND review_id=?', session["user_id"], review["review_id"])
-        if existing_likes:
-            review["liked"] = True
+        if session.get('user_id'):
+            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["review_id"])
+            review["liked"] = bool(existing_likes)
         else:
             review["liked"] = False
 
     # top reviewers
-    top_reviewers = db.execute('SELECT username, COUNT(reviews.id) AS review_count FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id ORDER BY COUNT(reviews.id) DESC LIMIT 5')
+    top_reviewers = db.execute('SELECT username, COUNT(reviews.id) AS review_count FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5')
 
     return render_template("reviews.html", reviews=reviews, popular_songs=popular_songs, top_reviewers=top_reviewers)
 
@@ -251,18 +250,17 @@ def like_review():
         return redirect("/reviews")
 
     # check if the user has already liked the review
-    existing_like = db.execute('SELECT * FROM likes WHERE user_id=? AND review_id=?', user_id, review_id)
+    existing_like = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=user_id, rid=review_id)
     if existing_like:
         # unlike the review
-        db.execute('DELETE FROM likes WHERE user_id=? AND review_id=?', user_id, review_id)
+        db.execute('DELETE FROM likes WHERE user_id=:uid AND review_id=:rid', uid=user_id, rid=review_id)
         liked = False
-
     else:
         # like the review
-        db.execute('INSERT INTO likes (user_id, review_id) VALUES(?,?)', user_id, review_id)
+        db.execute('INSERT INTO likes (user_id, review_id) VALUES(:user_id, :review_id)', user_id=user_id, review_id=review_id)
         liked = True
 
-    results = db.execute('SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=?', review_id)
+    results = db.execute('SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=:rid', rid=review_id)
     total_likes = results[0]['total_likes']
 
     return jsonify({"liked": liked, "total_likes": total_likes})
@@ -276,13 +274,13 @@ def delete_review(review_id):
     user_id = session.get('user_id')
 
     # check if the review exists and belongs to the current user
-    review = db.execute('SELECT * FROM reviews WHERE id=? AND user_id=?', review_id, user_id)
+    review = db.execute('SELECT * FROM reviews WHERE id=:id AND user_id=:user_id', id=review_id, user_id=user_id)
 
     if not review:
         return redirect("/account")
 
     # delete the review
-    db.execute('DELETE FROM reviews WHERE id=?', review_id)
+    db.execute('DELETE FROM reviews WHERE id=:id', id=review_id)
 
     return redirect("/account")
 
@@ -295,25 +293,21 @@ def edit_review():
     review_id = request.form.get("review_id")
     review_content = request.form.get("review")
     rating = int(request.form.get("rating"))
-    print(f'edit info: {review_id}, {review_content}, {rating}')
 
     # check if the review exists and belongs to the current user
-    review = db.execute('SELECT * FROM reviews WHERE id=? AND user_id=?', int(review_id), user_id)
+    review = db.execute('SELECT * FROM reviews WHERE id=:id AND user_id=:user_id', id=int(review_id), user_id=user_id)
     if not review:
-        error = "Review not found or does not belong to user"
-        return redirect("/account", message=error)
+        return redirect("/account")
 
     if not rating or rating < 1 or rating > 5:
-        error = 'Please provide a valid rating (1-5)'
-        return redirect("/account", message=error)
+        return redirect("/account")
 
     if not review_content:
-        error = 'Please provide a review.'
-        return redirect("/account", message=error)
+        return redirect("/account")
 
     # update the review in the database
-    db.execute('UPDATE reviews SET review_content=?, rating=? WHERE id=?', review_content, rating, review_id)
-    message = 'Review added'
+    db.execute('UPDATE reviews SET review_content=:review_content, rating=:rating WHERE id=:id', review_content=review_content, rating=rating, id=review_id)
+    message = 'Review updated'
     return redirect(f"/account?message={message}")
 
 
@@ -322,7 +316,7 @@ def other_user_profile(username):
     """ show a user's profile """
 
     # get the user's information
-    user = db.execute('SELECT id, username FROM users WHERE username=?', username)
+    user = db.execute('SELECT id, username FROM users WHERE username=:username', username=username)
     if not user:
         return redirect("/")
 
@@ -331,14 +325,13 @@ def other_user_profile(username):
         return redirect('/account')
 
     # get the user's reviews
-    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = ? GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user[0]['id'])
+    reviews = db.execute('SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = :user_id GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist', user_id=user[0]['id'])
     for review in reviews:
-        existing_likes = db.execute('SELECT * FROM likes WHERE user_id=? AND review_id=?', session["user_id"], review["id"])
-        if existing_likes:
-            review["liked"] = True
+        if session.get('user_id'):
+            existing_likes = db.execute('SELECT * FROM likes WHERE user_id=:uid AND review_id=:rid', uid=session["user_id"], rid=review["id"])
+            review["liked"] = bool(existing_likes)
         else:
             review["liked"] = False
-
 
     return render_template("usersProfile.html", username=user[0]['username'], reviews=reviews)
 
@@ -355,8 +348,7 @@ def validate_user():
     email = request.form.get('email')
 
     # get user details
-    user_info = db.execute('SELECT * FROM users WHERE email=?', email)
-    print(user_info)
+    user_info = db.execute('SELECT * FROM users WHERE email=:email', email=email)
 
     # user email not found in the db
     if not user_info:
@@ -369,7 +361,7 @@ def validate_user():
 
 @app.route('/resetPassword', methods=["POST"])
 def reset_Password():
-    """ resent password """
+    """ reset password """
     new_password = request.form.get('password')
     password_confirmation = request.form.get('confirmation')
     user_id = request.form.get('user_id')
@@ -382,11 +374,11 @@ def reset_Password():
         error = 'password do not match'
         return render_template("resetPassword.html", emailConfirmed=True, message=error)
 
-    #hash password
+    # hash password
     hashed_password = generate_password_hash(new_password)
 
     # update password in the db
-    db.execute('UPDATE users SET password_hash=? WHERE id=?', hashed_password, user_id)
+    db.execute('UPDATE users SET password_hash=:password_hash WHERE id=:id', password_hash=hashed_password, id=user_id)
     message = 'Password reset successful'
     return redirect(f'/login?message={message}')
 
@@ -397,12 +389,12 @@ def subscribe():
     """ add user to monthly newsletter """
     email = request.form.get('email')
     user_id = session['user_id']
-    
+
     if not email:
         error = 'Please provide a valid email'
         return redirect(f'/?message={error}')
 
     # store email to database
-    db.execute('INSERT INTO newsletter(user_id, email) VALUES(?,?)', user_id, email)
+    db.execute('INSERT INTO newsletter(user_id, email) VALUES(:user_id, :email)', user_id=user_id, email=email)
     message = 'Thank you for subscribing to the newsletter'
     return redirect(f'/?message={message}')
