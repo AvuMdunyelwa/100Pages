@@ -155,18 +155,21 @@ def find_track():
     artist = request.form.get("artist")
 
     if not song:
-        return music("Please enter a song title")
+        error = "Please enter a song title"
+        return render_template("music.html", message=error)
 
     songs = search_for_song(song,artist)
 
     if not songs:
-        return music(f"no results found for: {song}")
+        error = f"no results found for: {song}"
+        return render_template("music.html", message=error)
     try:
         # display song details
         return render_template("music.html", songs=songs, input=song)
     except ValueError:
         # no song found
-        return music(f"no results found for: {song}")
+        error = f"no results found for: {song}"
+        return render_template("music.html", message=error)
 
 
 @app.route("/review", methods=["POST"])
