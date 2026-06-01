@@ -68,6 +68,11 @@ form {
     border: none;
 }
 
+#password-wrapper:focus-within {
+    border: 1px solid #86b7fe !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
 #hero-section {
     max-width: 100%;
     height: var(--height);
