@@ -87,7 +87,8 @@ def login():
             return render_template("login.html", message='Invalid username and/or password')
 
         session["user_id"] = rows[0]["id"]
-        return redirect(url_for("landing_page"))
+        message = 'Successfully login!'
+        return redirect(f'/?message={message}')
     else:
         return render_template("login.html", message=message)
 
