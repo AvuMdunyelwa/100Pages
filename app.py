@@ -162,10 +162,10 @@ def store_review():
     if not review:
         return render_template("music.html", message='Please provide a review.')
 
-    existing_review = db_execute('SELECT * FROM reviews WHERE user_id=%(user_id)s AND track_id=%(track_id)s', user_id=user_id, track_id=track_id)
-    print(f"existing reviews found: {existing_review}")
-    if existing_review:
-        return render_template('music.html', message='You have already reviewed this song')
+    #existing_review = db_execute('SELECT * FROM reviews WHERE user_id=%(user_id)s AND track_id=%(track_id)s', user_id=user_id, track_id=track_id)
+    #print(f"existing reviews found: {existing_review}")
+    #if existing_review:
+       # return render_template('music.html', message='You have already reviewed this song')
     
     db_execute("INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(%(user_id)s, %(track_id)s, %(song_title)s, %(artist)s, %(cover_img_url)s, %(review_content)s, %(rating)s)",
                user_id=user_id, track_id=track_id, song_title=track_title, artist=track_artist, cover_img_url=track_img, review_content=review, rating=rating)
