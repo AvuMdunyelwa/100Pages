@@ -55,6 +55,8 @@ if (confirmPassword) {
     })
 }
 
+//prevent multiple review submissions
+
 
 // passing the song review data form & pre-filling the form for editing review
 function getAttributes(element) {
@@ -80,19 +82,23 @@ document.addEventListener("show.bs.modal", function(event) {
             form.querySelector("#content").value = reviewContent;
             form.querySelector("#rating").value = rating;
             form.querySelector("#reviewId").value = reviewId;
-            console.log(form)
 
         }
     }else if (modal.id === "reviewSong") {
-        console.log('add review modal open')
         if (modal) {
             const clickedBtn = event.relatedTarget  // the exact button clicked
             const {songTitle, trackId, coverImg, songArtist} = getAttributes(clickedBtn);
-            console.log("Clicked button attributes:", {songTitle, trackId, coverImg, songArtist});
             const modalTitle = modal.querySelector(".modal-title");
             modalTitle.textContent = `${songTitle} by ${songArtist}`;
 
             const form = modal.querySelector(".modal-content");
+
+            form.addEventListener('submit', function() {
+                const btn = form.querySelector('#add-review');
+                btn.disabled = true;
+                btn.textContent = 'submitting..';
+            })
+            
             modal.querySelector("#trackId").value = trackId;
             form.querySelector("#trackTitle").value = songTitle;
             form.querySelector("#trackArtist").value = songArtist;
