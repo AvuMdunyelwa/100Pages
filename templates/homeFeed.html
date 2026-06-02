@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
     <section class='w-100 d-flex flex-column align-items-center gap-2' style="border: none;">
+        {% if message %}
+        <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-20 start-50 translate-middle" role="alert">
+            <strong>{{message}}</strong>
+        </div>
+        {% endif %}
         <div class='greeting' style="display: grid; align-items: end; justify-items: center; margin-top: 1rem;">
             <h1 style="color: grey; text-align: center; font-weight: 200; font-size: 1.9rem;">Welcome back, <span style="color: white; text-decoration: underline;">{{username}}</span>. Here's what we've been listening...</h1>
         </div>
