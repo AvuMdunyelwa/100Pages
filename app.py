@@ -114,7 +114,9 @@ def register():
         try:
             db_execute("INSERT INTO users (username, name, surname, email, password_hash) VALUES(%(username)s, %(name)s, %(surname)s, %(email)s, %(password_hash)s)",
                        username=username, name=name, surname=surname, email=email, password_hash=generate_password_hash(password))
-            return redirect('/login')
+            message = 'Login successful!'
+            return redirect(f'/login?message={message}')
+        
         except Exception:
             return render_template("register.html", message='Username or email already exists')
     else:
