@@ -55,7 +55,6 @@ if (confirmPassword) {
     })
 }
 
-//prevent multiple review submissions
 
 
 // passing the song review data form & pre-filling the form for editing review
@@ -66,7 +65,8 @@ function getAttributes(element) {
     const reviewContent = element.getAttribute("data-bs-content");
     const rating = element.getAttribute("data-bs-rating");
     const coverImg = element.getAttribute("data-bs-img");
-    return {songTitle, reviewId, songArtist, reviewContent, rating, coverImg};
+    const trackId = element.getAttribute("data-bs-trackid");
+    return {songTitle, reviewId, songArtist, reviewContent, rating, coverImg, trackId};
 }
 
 document.addEventListener("show.bs.modal", function(event) {
@@ -86,8 +86,9 @@ document.addEventListener("show.bs.modal", function(event) {
         }
     }else if (modal.id === "reviewSong") {
         if (modal) {
-            const clickedBtn = event.relatedTarget  // the exact button clicked
+            const clickedBtn = event.relatedTarget 
             const {songTitle, trackId, coverImg, songArtist} = getAttributes(clickedBtn);
+            console.log(trackId);
             const modalTitle = modal.querySelector(".modal-title");
             modalTitle.textContent = `${songTitle} by ${songArtist}`;
 
