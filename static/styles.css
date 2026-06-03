@@ -63,9 +63,8 @@ form {
     transition: all 0.5s ease;
 }
 
-.alert button {
-    background: none;
-    border: none;
+.alert {
+    z-index: 10;
 }
 
 #password-wrapper:focus-within {
