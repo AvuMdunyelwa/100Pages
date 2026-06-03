@@ -368,7 +368,6 @@ def get_activity():
 
     # get all user's notifications
     notifications = db_execute('SELECT * FROM notifications WHERE recipient_id=%(user_id)s', user_id=user_id)
-    print(f'activity: {notifications}')
 
-    return render_template('notifications.html')
+    return render_template('notifications.html', notifications=notifications)
     
