@@ -7,19 +7,19 @@
             <div id="activity">
                 {% if activity.type == 'liked_review' %}
                     <p>
-                        You liked {{activity.username}}'s review of {{activity.songTitle}} by {{activity.artist}}
+                        You liked {{activity.sender}}'s review of {{activity.song_title}} by {{activity.artist}}
                     </p>
-                    <span>{{activity.date}}</span>
+                    <span>{{activity.}}</span>
                 {% elif activity.type == 'like_received' %}
                     <p>
-                        {{activity.username}} liked your review of {{activity.songTitle}} by {{activity.artist}}
+                        {{activity.sender}} liked your review of {{activity.song_title}} by {{activity.artist}}
                     </p>
-                    <span>{{activity.date}}</span>
+                    <span>{{activity.created_at}}</span>
                 {% else %}
                     <p>
-                        You added a review of the song {{activity.songTitle}} by {{activity.artist}}
+                        You added a review of the song {{activity.song_title}} by {{activity.artist}}
                     </p>
-                    <span>{{activity.date}}</span>
+                    <span>{{activity.created_at}}</span>
                 {% endif %}
             </div>
             {% endfor %}
