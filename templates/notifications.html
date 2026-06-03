@@ -9,7 +9,7 @@
                     <p>
                         You liked {{activity.sender}}'s review of {{activity.song_title}} by {{activity.artist}}
                     </p>
-                    <span>{{activity.}}</span>
+                    <span>{{activity.created_at}}</span>
                 {% elif activity.type == 'like_received' %}
                     <p>
                         {{activity.sender}} liked your review of {{activity.song_title}} by {{activity.artist}}
