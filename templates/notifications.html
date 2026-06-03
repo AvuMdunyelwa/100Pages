@@ -5,12 +5,12 @@
         <div id="notifications-wrapper">
             {% for activity in notification %}
             <div id="activity">
-                {% if type == 'liked_review' %}
+                {% if activity.type == 'liked_review' %}
                     <p>
                         You liked {{activity.username}}'s review of {{activity.songTitle}} by {{activity.artist}}
                     </p>
                     <span>{{activity.date}}</span>
-                {% elif type == 'like_received' %}
+                {% elif activity.type == 'like_received' %}
                     <p>
                         {{activity.username}} liked your review of {{activity.songTitle}} by {{activity.artist}}
                     </p>
@@ -20,6 +20,7 @@
                         You added a review of the song {{activity.songTitle}} by {{activity.artist}}
                     </p>
                     <span>{{activity.date}}</span>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
