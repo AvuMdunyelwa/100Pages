@@ -367,7 +367,7 @@ def get_activity():
     user_id = session.get('user_id')
 
     # get all user's notifications
-    notifications = db_execute('SELECT notifications.*, sender.username AS sender FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
+    notifications = db_execute('SELECT notifications.*, sender.username AS sender, reviews.artist, reviews.song_title FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id JOIN reviews ON reviews.id = notifications.review_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
 
     return render_template('notifications.html', notifications=notifications)
     
