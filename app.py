@@ -168,8 +168,14 @@ def store_review():
     db_execute("INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(%(user_id)s, %(track_id)s, %(song_title)s, %(artist)s, %(cover_img_url)s, %(review_content)s, %(rating)s)",
                user_id=user_id, track_id=track_id, song_title=track_title, artist=track_artist, cover_img_url=track_img, review_content=review, rating=rating)
 
-    message = 'review successfully added!'
-    return redirect(f'/account?message={message}')
+    #get added review id
+    review_id = db_execute('SELECT * FROM reviews WHERE user_id=%(user_id)s AND track_id=%(track_id)s', user_id=user_id, track_id=track_id)
+
+    notify_review = db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)', 
+                               recipient_id=user_id, sender_id=user_id, type='added review', review_id=review_id[0]['id'], is_read=False)
+    
+ 
+    return redirect(f"/account?message='review successfully added!'")
 
 
 @app.route("/account", methods=["GET"])
@@ -208,7 +214,21 @@ def like_review():
     if not review_id:
         return redirect("/reviews")
 
+    #record like notification
+
+    recipient_id = db_execute('SELECT * FROM reviews WHERE id=%(review_id)s', review_id=review_id)
+    
+    # notify the review owner that their review was liked
+    db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
+            recipient_id=recipient_id[0]['user_id'], sender_id=user_id, type='received_like', review_id=review_id, is_read=False)
+
+    # notify the liker that they liked a review
+    db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
+            recipient_id=user_id, sender_id=user_id, type='liked_review', review_id=review_id, is_read=False)
+    
+    #check for reviews liked by user
     existing_like = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
+
     if existing_like:
         db_execute("DELETE FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
         liked = False
