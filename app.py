@@ -148,7 +148,6 @@ def find_track():
 def store_review():
     user_id = session["user_id"]
     track_id = request.form.get("id")
-    print(f"track_id from form: '{track_id}'")
     track_title = request.form.get("title")
     track_artist = request.form.get("artist")
     track_img = request.form.get("img")
@@ -163,7 +162,6 @@ def store_review():
         return render_template("music.html", message='Please provide a review.')
 
     existing_review = db_execute('SELECT * FROM reviews WHERE user_id=%(user_id)s AND track_id=%(track_id)s', user_id=user_id, track_id=track_id)
-    print(f"existing reviews found: {existing_review}")
     if existing_review:
         return render_template('music.html', message='You have already reviewed this song')
     
