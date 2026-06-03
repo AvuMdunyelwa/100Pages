@@ -46,7 +46,7 @@ def after_request(response):
 @app.route('/')
 def landing_page():
     message = request.args.get('message')
-    popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
+    popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating, COUNT(*) AS review_count FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days' GROUP BY track_id ORDER BY review_count DESC, AVG(rating) DESC LIMIT 5")
     reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10")
 
     if session.get('user_id'):
@@ -168,16 +168,18 @@ def store_review():
     db_execute("INSERT INTO reviews (user_id, track_id, song_title, artist, cover_img_url, review_content, rating) VALUES(%(user_id)s, %(track_id)s, %(song_title)s, %(artist)s, %(cover_img_url)s, %(review_content)s, %(rating)s)",
                user_id=user_id, track_id=track_id, song_title=track_title, artist=track_artist, cover_img_url=track_img, review_content=review, rating=rating)
 
-    return redirect('/account')
+    message = 'review successfully added!'
+    return redirect(f'/account?message={message}')
 
 
 @app.route("/account", methods=["GET"])
 @login_required
 def profile():
+    message = request.args.get('message')
     user_id = session["user_id"]
     username = db_execute("SELECT username FROM users WHERE id=%(id)s", id=user_id)
     reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id=%(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist", user_id=user_id)
-    return render_template("profile.html", username=username[0]['username'], reviews=reviews)
+    return render_template("profile.html", username=username[0]['username'], reviews=reviews, message=message)
 
 
 @app.route("/reviews", methods=["GET"])
