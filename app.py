@@ -95,6 +95,8 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """ register newcomers """
+
     if request.method == 'POST':
         password = request.form.get('password')
         confirmation = request.form.get('confirmation')
@@ -126,6 +128,8 @@ def register():
 
 @app.route("/song", methods=["POST"])
 def find_track():
+    """ return search results of a song """
+
     song = request.form.get("song")
     artist = request.form.get("artist")
 
@@ -146,6 +150,8 @@ def find_track():
 @app.route("/review", methods=["POST"])
 @login_required
 def store_review():
+    """ store review post details """
+
     user_id = session["user_id"]
     track_id = request.form.get("id")
     track_title = request.form.get("title")
@@ -181,6 +187,7 @@ def store_review():
 @app.route("/account", methods=["GET"])
 @login_required
 def profile():
+    """ get users reviews """
     message = request.args.get('message')
     user_id = session["user_id"]
     username = db_execute("SELECT username FROM users WHERE id=%(id)s", id=user_id)
@@ -190,6 +197,8 @@ def profile():
 
 @app.route("/reviews", methods=["GET"])
 def reviews():
+    """ get all reviews """
+
     popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
     reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes, MAX(reviews.created_at) AS created_at FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY created_at DESC LIMIT 10")
 
@@ -208,6 +217,8 @@ def reviews():
 @app.route("/likes", methods=["POST"])
 @login_required
 def like_review():
+    """ record review posts liked """
+
     review_id = int(request.form.get("review_id"))
     user_id = session["user_id"]
 
@@ -245,6 +256,8 @@ def like_review():
 @app.route("/delete-review/<int:review_id>", methods=["GET"])
 @login_required
 def delete_review(review_id):
+    """ edit users review post """
+
     user_id = session.get('user_id')
     review = db_execute("SELECT * FROM reviews WHERE id=%(id)s AND user_id=%(user_id)s", id=review_id, user_id=user_id)
 
@@ -258,6 +271,8 @@ def delete_review(review_id):
 @app.route("/edit-review", methods=["POST"])
 @login_required
 def edit_review():
+    """ edit users review post """
+
     user_id = session["user_id"]
     review_id = request.form.get("review_id")
     review_content = request.form.get("review")
@@ -277,6 +292,8 @@ def edit_review():
 
 @app.route("/user/<username>", methods=["GET"])
 def other_user_profile(username):
+    """ view other users profiles """
+
     user = db_execute("SELECT id, username FROM users WHERE username=%(username)s", username=username)
     if not user:
         return redirect("/")
@@ -302,6 +319,8 @@ def forgot_password():
 
 @app.route('/validateUseremail', methods=["POST"])
 def validate_user():
+    """ check user exist through email check before allowing password reset """
+
     email = request.form.get('email')
     user_info = db_execute("SELECT * FROM users WHERE email=%(email)s", email=email)
 
@@ -313,6 +332,8 @@ def validate_user():
 
 @app.route('/resetPassword', methods=["POST"])
 def reset_Password():
+    """ reset users existing password """
+
     new_password = request.form.get('password')
     password_confirmation = request.form.get('confirmation')
     user_id = request.form.get('user_id')
@@ -338,3 +359,16 @@ def subscribe():
 
     db_execute("INSERT INTO newsletter(user_id, email) VALUES(%(user_id)s, %(email)s)", user_id=user_id, email=email)
     return redirect('/?message=Thank you for subscribing to the newsletter')
+
+@app.route('/activity', methods=["GET"])
+@login_required
+def get_activity():
+    """ get users notifications """
+    user_id = session.get('user_id')
+
+    # get all user's notifications
+    notifications = db_execute('SELECT * FROM notifications WHERE recipient_id=%(user_id)s', user_id=user_id)
+    print(notifications)
+
+    return render_template('notifications.html')
+    
