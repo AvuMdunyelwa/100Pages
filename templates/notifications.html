@@ -2,9 +2,9 @@
 {% block content %}
     <section id="activity-notifications">
         <h6>Activity</h6>
-        <div id="notifications-wrapper">
+        <div class="container-fluid w-100"  id="notifications-wrapper">
             {% for activity in notifications %}
-            <div id="activity">
+            <div class="row h-25 w-100" id="activity" style="border-bottom: 1px solid gray;">
                 {% if activity.type == 'liked_review' %}
                     <p>
                         You liked {{activity.sender}}'s review of {{activity.song_title}} by {{activity.artist}}
@@ -15,6 +15,7 @@
                         {{activity.sender}} liked your review of {{activity.song_title}} by {{activity.artist}}
                     </p>
                     <span>{{activity.created_at}}</span>
+                    <img src="{{activity.cover}}"  class="img-fluid" alt="{{activity.song_title}}">
                 {% else %}
                     <p>
                         You added a review of the song {{activity.song_title}} by {{activity.artist}}
