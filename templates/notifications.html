@@ -6,32 +6,32 @@
             {% for activity in notifications %}
             <div class="row d-flex" id="activity" style="border-bottom: 1px solid gray; height: 20vh;">
                 {% if activity.type == 'liked_review' %}
-                    <div class="card w-50 h-100 flex-row" style="background: none;">
+                    <div class="card w-50 h-100 flex-row p-2" style="background: none;">
                         <img src="{{activity.cover}}" class="card-img-top" alt="..." style="max-width: 20%; height: 100%; border-radius: 10px;">
                         <div class="card-body">
                             <p style="color: white; font-size: 1rem">
-                                You liked <b>{{activity.sender}}</b>'s review of <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b>
+                                You liked <b>{{activity.sender}}</b>'s review of <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b><br>
                                 <span style="color: floralwhite;">{{activity.created_at}}</span>
                             </p>
                         </div>
                     </div>
                 {% elif activity.type == 'like_received' %}
-                    <div class="card w-50 h-100 flex-row" style="background: none;">
+                    <div class="card w-50 h-100 flex-row p-2" style="background: none;">
                         <img src="{{activity.cover}}" class="card-img-top" alt="..." style="max-width: 20%; height: 100%; border-radius: 10px;">
                         <div class="card-body">
                             <p style="color: white; font-size: 1rem">
-                                <b>{{activity.sender}}</b> liked your review of <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b>
+                                <b>{{activity.sender}}</b> liked your review of <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b><br>
                                 <span style="color: floralwhite;">{{activity.created_at}}</span>
                             </p>
                         </div>
                     </div>
                 {% else %}
-                    <div class="card w-50 h-100 flex-row" style="background: none;">
+                    <div class="card w-50 h-100 flex-row p-2" style="background: none;">
                         <img src="{{activity.cover}}" class="card-img-top" alt="..." style="max-width: 20%; height: 100%; border-radius: 10px;">
                         <div class="card-body">
                             <p style="color: white; font-size: 1rem">
-                                    You added a review of the song <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b>
-                                    <span style="color: floralwhite;">{{activity.created_at}}</span>
+                                You added a review of the song <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b><br>
+                                <span style="color: floralwhite;">{{activity.created_at}}</span>
                             </p>
                         </div>
                     </div>
