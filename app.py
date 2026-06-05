@@ -178,7 +178,7 @@ def store_review():
     review_id = db_execute('SELECT * FROM reviews WHERE user_id=%(user_id)s AND track_id=%(track_id)s', user_id=user_id, track_id=track_id)
 
     notify_review = db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)', 
-                               recipient_id=user_id, sender_id=user_id, type='added review', review_id=review_id[0]['id'], is_read=False)
+                               recipient_id=user_id, sender_id=user_id, type='added_review', review_id=review_id[0]['id'], is_read=False)
     
  
     return redirect(f"/account?message='review successfully added!'")
