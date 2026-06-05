@@ -1,3 +1,5 @@
+import datetime
+import timeago
 import os
 import psycopg2
 import psycopg2.extras
@@ -33,6 +35,24 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+
+def get_elapsed_time(timestamp_str, locale="en"):
+    # Match the exact pattern including microseconds (%f)
+    date_format = "%Y-%m-%d %H:%M:%S.%f"
+
+    # Parse string into a datetime object
+    naive_date = datetime.datetime.strptime(timestamp_str, date_format)
+
+    # Make it timezone aware (UTC)
+    past_date = naive_date.replace(tzinfo=datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc)
+
+    # Calculate relative time string
+    return timeago.format(past_date, now, locale)
+
+
 
 @app.after_request
 def after_request(response):
@@ -368,6 +388,9 @@ def get_activity():
 
     # get all user's notifications
     notifications = db_execute('SELECT notifications.*, sender.username AS sender, reviews.artist, reviews.song_title, reviews.cover_img_url AS cover FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id JOIN reviews ON reviews.id = notifications.review_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
+
+    for activity in notifications:
+        activity['created_at'] = get_elapsed_time(activity['created_at']) 
 
     return render_template('notifications.html', notifications=notifications)
     
