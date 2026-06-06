@@ -117,6 +117,26 @@ form {
             width: 30% !important;
         }
     }
+
+    #activity-notifications {
+        .row .card {
+            width: 100%;
+        }
+
+        .card-img-top {
+            max-width: 30%;
+        }
+
+        .card-body {
+            p {
+                font-size: 0.5rem;
+            }
+
+            span {
+                font-size: 0.3rem;
+            }
+        }
+    }
 }
 
 section {
