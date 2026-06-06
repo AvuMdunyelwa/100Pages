@@ -406,8 +406,8 @@ def get_activity():
     notifications = db_execute('SELECT notifications.*, sender.username AS sender, reviews.artist, reviews.song_title, reviews.cover_img_url AS cover FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id JOIN reviews ON reviews.id = notifications.review_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
 
     for activity in notifications:
-        print(activity)
         activity['created_at'] = get_elapsed_time(activity['created_at']) 
+        db_execute('UPDATE notifications SET is_read=%(read)s WHERE is_read=%(not_read)s', read="True", not_read="False")
 
     return render_template('notifications.html', notifications=notifications)
     
