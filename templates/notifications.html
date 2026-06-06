@@ -5,7 +5,17 @@
         <div class="container-fluid w-100 h-auto p-3"  id="notifications-wrapper">
             {% for activity in notifications %}
             <div class="row d-flex" id="activity" style="border-bottom: 1px solid gray; height: 20vh;">
-                {% if activity.type == 'like_received' %}
+                {% if activity.type == 'liked_review' %}
+                    <div class="card w-50 h-100 flex-row p-2" style="background: none; border: none;">
+                        <img src="{{activity.cover}}" class="card-img-top" alt="..." style="max-width: 20%; height: 100%; border-radius: 10px;">
+                        <div class="card-body">
+                            <p style="color: white; font-size: 1rem">
+                                You liked <b>{{activity.sender}}</b>'s review of <b>{{activity.song_title}}</b> by <b>{{activity.artist}}</b><br>
+                                <span style="color: floralwhite; font-size: 0.8rem;">{{activity.created_at}}</span>
+                            </p>
+                        </div>
+                    </div>
+                {% elif activity.type == 'received_like' %}
                     <div class="card w-50 h-100 flex-row p-2" style="background: none; border: none;">
                         <img src="{{activity.cover}}" class="card-img-top" alt="..." style="max-width: 20%; height: 100%; border-radius: 10px;">
                         <div class="card-body">
