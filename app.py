@@ -39,18 +39,32 @@ Session(app)
 
 
 def get_elapsed_time(timestamp_str, locale="en"):
-    # Match the exact pattern including microseconds (%f)
-    date_format = "%Y-%m-%d %H:%M:%S.%f"
+    if not timestamp_str:
+        return "unknown"
 
-    # Parse string into a datetime object
-    naive_date = datetime.datetime.strptime(timestamp_str, date_format)
+    formats = [
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y-%m-%d %H:%M:%S",
+    ]
 
-    # Make it timezone aware (UTC)
+    naive_date = None
+    for fmt in formats:
+        try:
+            naive_date = datetime.datetime.strptime(timestamp_str, fmt)
+            break
+        except ValueError:
+            continue
+
+    if naive_date is None:
+        return "unknown"
+
     past_date = naive_date.replace(tzinfo=datetime.timezone.utc)
     now = datetime.datetime.now(datetime.timezone.utc)
 
-    # Calculate relative time string
-    return timeago.format(past_date, now, locale)
+    try:
+        return timeago.format(past_date, now, locale)
+    except Exception:
+        return timeago.format(past_date, now, "en")
 
 
 
