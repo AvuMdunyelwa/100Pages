@@ -259,8 +259,17 @@ def like_review():
     if not review_id:
         return redirect("/reviews")
 
-    #record like notification
+    #check for reviews liked by user
+    existing_like = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
 
+    if existing_like:
+        db_execute("DELETE FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
+        liked = False
+    else:
+        db_execute("INSERT INTO likes (user_id, review_id) VALUES(%(user_id)s, %(review_id)s)", user_id=user_id, review_id=review_id)
+        liked = True
+
+    #record like notification
     recipient_id = db_execute('SELECT * FROM reviews WHERE id=%(review_id)s', review_id=review_id)
     
     # notify the review owner that their review was liked
@@ -271,15 +280,6 @@ def like_review():
     db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
             recipient_id=user_id, sender_id=user_id, type='liked_review', review_id=review_id, is_read=False)
     
-    #check for reviews liked by user
-    existing_like = db_execute("SELECT * FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
-
-    if existing_like:
-        db_execute("DELETE FROM likes WHERE user_id=%(uid)s AND review_id=%(rid)s", uid=user_id, rid=review_id)
-        liked = False
-    else:
-        db_execute("INSERT INTO likes (user_id, review_id) VALUES(%(user_id)s, %(review_id)s)", user_id=user_id, review_id=review_id)
-        liked = True
 
     results = db_execute("SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=%(rid)s", rid=review_id)
     total_likes = results[0]['total_likes']
