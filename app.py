@@ -38,25 +38,26 @@ Session(app)
 
 
 
-def get_elapsed_time(timestamp_str, locale="en"):
-    if not timestamp_str:
+def get_elapsed_time(timestamp, locale="en"):
+    if not timestamp:
         return "unknown"
 
-    formats = [
-        "%Y-%m-%d %H:%M:%S.%f",
-        "%Y-%m-%d %H:%M:%S",
-    ]
-
-    naive_date = None
-    for fmt in formats:
-        try:
-            naive_date = datetime.strptime(timestamp_str, fmt)
-            break
-        except ValueError:
-            continue
-
-    if naive_date is None:
-        return "unknown"
+    if isinstance(timestamp, str):
+        formats = [
+            "%Y-%m-%d %H:%M:%S.%f",
+            "%Y-%m-%d %H:%M:%S",
+        ]
+        naive_date = None
+        for fmt in formats:
+            try:
+                naive_date = datetime.strptime(timestamp, fmt)
+                break
+            except ValueError:
+                continue
+        if naive_date is None:
+            return "unknown"
+    else:
+        naive_date = timestamp
 
     past_date = naive_date.replace(tzinfo=timezone.utc)
     now = datetime.now(timezone.utc)
@@ -65,7 +66,6 @@ def get_elapsed_time(timestamp_str, locale="en"):
         return timeago.format(past_date, now, locale)
     except Exception:
         return timeago.format(past_date, now, "en")
-
 
 
 @app.after_request
