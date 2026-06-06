@@ -271,13 +271,15 @@ def like_review():
 
     #record like notification
     recipient_id = db_execute('SELECT * FROM reviews WHERE id=%(review_id)s', review_id=review_id)
-    
-    # notify the review owner that their review was liked
-    db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
-            recipient_id=recipient_id[0]['user_id'], sender_id=user_id, type='received_like', review_id=review_id, is_read=False)
 
-    # notify the liker that they liked a review
-    db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
+    if not recipient_id[0]['user_id'] == user_id:
+        
+        # notify the review owner that their review was liked
+        db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
+                recipient_id=recipient_id[0]['user_id'], sender_id=user_id, type='received_like', review_id=review_id, is_read=False)
+
+        # notify the liker that they liked a review
+        db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
             recipient_id=user_id, sender_id=user_id, type='liked_review', review_id=review_id, is_read=False)
     
 
