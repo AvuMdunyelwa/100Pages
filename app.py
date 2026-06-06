@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 import timeago
 import os
 import psycopg2
@@ -50,7 +50,7 @@ def get_elapsed_time(timestamp_str, locale="en"):
     naive_date = None
     for fmt in formats:
         try:
-            naive_date = datetime.datetime.strptime(timestamp_str, fmt)
+            naive_date = datetime.strptime(timestamp_str, fmt)
             break
         except ValueError:
             continue
@@ -58,8 +58,8 @@ def get_elapsed_time(timestamp_str, locale="en"):
     if naive_date is None:
         return "unknown"
 
-    past_date = naive_date.replace(tzinfo=datetime.timezone.utc)
-    now = datetime.datetime.now(datetime.timezone.utc)
+    past_date = naive_date.replace(tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
 
     try:
         return timeago.format(past_date, now, locale)
