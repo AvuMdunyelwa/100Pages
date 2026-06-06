@@ -403,7 +403,7 @@ def get_activity():
     user_id = session.get('user_id')
 
     # get all user's notifications
-    notifications = db_execute('SELECT notifications.*, sender.username AS sender, owner.username AS owner, reviews.artist, reviews.song_title, reviews.cover_img_url AS cover FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id JOIN users AS owner ON owner.id = reviews.user_id JOIN reviews ON reviews.id = notifications.review_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
+    notifications = db_execute('SELECT notifications.*, sender.username AS sender, owner.username AS owner, reviews.artist, reviews.song_title, reviews.cover_img_url AS cover FROM notifications JOIN users AS sender ON sender.id = notifications.sender_id JOIN reviews ON reviews.id = notifications.review_id JOIN users AS owner ON owner.id = reviews.user_id WHERE recipient_id=%(user_id)s ORDER BY notifications.created_at DESC', user_id=user_id)
 
     for activity in notifications:
         activity['created_at'] = get_elapsed_time(activity['created_at']) 
