@@ -407,7 +407,7 @@ def get_activity():
 
     for activity in notifications:
         activity['created_at'] = get_elapsed_time(activity['created_at']) 
-        db_execute('UPDATE notifications SET is_read=%(read)s WHERE is_read=%(not_read)s', read="True", not_read="False")
+        db_execute('UPDATE notifications SET is_read=%(read)s WHERE id=%(id)s', read="True", id=activity['id'])
 
     return render_template('notifications.html', notifications=notifications)
     
