@@ -155,28 +155,28 @@ section {
 }
 
 @media (max-width: 430px) {
-    .card.w-75 {
+    .card.w-50 {
         width: 100% !important;
         height: auto !important;
     }
 
-    .card.w-75 .row {
+    .card.w-50 .row {
         flex-direction: row !important;
     }
 
-    .card.w-75 .col-md-4 {
+    .card.w-50 .col-md-4 {
         width: 40% !important;
     }
 
-    .card.w-75 .col-md-8 {
+    .card.w-50 .col-md-8 {
         width: 60% !important;
     }
 
-    .card.w-75 .card-body h5 {
+    .card.w-50 .card-body h5 {
         font-size: 0.8rem !important;
     }
 
-    .card.w-75 .card-body p {
+    .card.w-50 .card-body p {
         font-size: 0.7rem !important;
     }
 }
