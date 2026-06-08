@@ -155,29 +155,51 @@ section {
 }
 
 @media (max-width: 430px) {
-    .card.w-50 {
-        width: 100% !important;
-        height: auto !important;
+    .card {
+        margin: 0 !important;
+        height: 20dvh !important;
     }
 
-    .card.w-50 .row {
-        flex-direction: row !important;
+    .card .row {
+        flex-wrap: nowrap !important;
+        max-width: 100% !important;
+        height: 100% !important;
     }
 
-    .card.w-50 .col-md-4 {
+    .card .col-md-4 {
         width: 40% !important;
+        height: 100% !important;
+        flex-shrink: 0 !important;
     }
 
-    .card.w-50 .col-md-8 {
+    .card .col-md-4 img {
+        max-width: 100% !important;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card .col-md-8,
+    .card aside {
         width: 60% !important;
+        flex-shrink: 0 !important;
+        min-width: 0;
+        height: 100% !important;
     }
 
-    .card.w-50 .card-body h5 {
+    .card .card-body {
+        padding: 0.5em !important;
+        max-width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .card .card-body h5 {
         font-size: 0.8rem !important;
     }
 
-    .card.w-50 .card-body p {
-        font-size: 0.7rem !important;
+    .card .card-body p {
+        font-size: 0.5rem !important;
+        color: grey;
     }
 }
 
