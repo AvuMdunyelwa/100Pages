@@ -263,6 +263,7 @@ h6 {
 
     .music-gallery {
         overflow-x: auto;
+        overflow-y: hidden;
         white-space: nowrap;
         width: calc(100% + 24px);
         height: 21dvh;
