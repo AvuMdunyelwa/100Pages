@@ -205,7 +205,6 @@ h6 {
     #explore .card {
         margin: 0 !important;
         height: 20dvh !important;
-        width: 80vw !important;
     }
 
     #explore .card .row {
@@ -276,6 +275,11 @@ h6 {
         display: inline-block;
         max-width: 100% !important;
         height: 17dvh !important;
+    }
+
+    .music-gallery .card .card-img-top {
+        height: 100% !important;
+        object-fit: cover !important;
     }
 
     .music-gallery .card-body {
