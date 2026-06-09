@@ -207,49 +207,50 @@ h6 {
     }
 
     /* explore card */
-    #explore .card {
+    .card {
         margin: 0 !important;
         height: 20dvh !important;
+        width: 78vw !important;
     }
 
-    #explore .card .row {
+    .card .row {
         flex-wrap: nowrap !important;
         max-width: 100% !important;
         height: 100% !important;
     }
 
-    #explore .card .col-md-4 {
+    .card .col-md-4 {
         width: 40% !important;
         height: 100% !important;
         flex-shrink: 0 !important;
     }
 
-    #explore .card .col-md-4 img {
+    .card .col-md-4 img {
         max-width: 100% !important;
         height: 100%;
         object-fit: cover;
     }
 
-    #explore .card .col-md-8,
-    #explore .card aside {
+    .card .col-md-8,
+    .card aside {
         width: 60% !important;
         flex-shrink: 0 !important;
         min-width: 0;
         height: 100% !important;
     }
 
-    #explore .card .card-body {
+    .card .card-body {
         padding: 0.5em !important;
         max-width: 100%;
         height: 100%;
         overflow: hidden;
     }
 
-    #explore .card .card-body h5 {
+    .card .card-body h5 {
         font-size: 0.8rem !important;
     }
 
-    #explore .card .card-body p {
+    .card .card-body p {
         font-size: 0.5rem !important;
         color: grey;
     }
