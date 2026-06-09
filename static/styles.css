@@ -122,6 +122,19 @@ h6 {
     text-align: center;
 }
 
+#review .song-cover {
+    width: 35%;
+    height: 25vh;
+}
+
+#review .review-body {
+    width: 65%;
+}
+
+#review .review-body .rating {
+    width: 100%;
+}
+
 /* ─── MOBILE ─────────────────────────────────────── */
 @media (max-width: 430px) {
 
@@ -271,7 +284,8 @@ h6 {
 
     .music-gallery .card-body img {
         max-width: 6% !important;
-        height: auto !important;
+        width: 100% !important;
+        height: 100% !important;
         object-fit: cover !important;
         display: block !important;
     }
