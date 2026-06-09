@@ -135,6 +135,11 @@ h6 {
     width: 100%;
 }
 
+/* top reviewers */
+    #top-reviewers {
+        overflow-x: hidden;
+    }
+
 /* ─── MOBILE ─────────────────────────────────────── */
 @media (max-width: 430px) {
 
@@ -259,7 +264,7 @@ h6 {
         overflow-x: auto;
         white-space: nowrap;
         width: calc(100% + 24px);
-        height: 20dvh;
+        height: 21dvh;
         padding: 0;
     }
 
@@ -274,7 +279,7 @@ h6 {
     .music-gallery .card {
         display: inline-block;
         max-width: 100% !important;
-        height: 17dvh !important;
+        max-height: 18dvh !important;
     }
 
     .music-gallery .card .card-img-top {
