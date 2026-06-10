@@ -271,8 +271,9 @@ h6 {
         height: 21vh !important;
         padding: 0;
     }
-
+    
     .music-gallery .row {
+        overflow-y: hidden;
         grid-template-columns: repeat(5, 32%) !important;
         width: 100%;
         overflow-x: auto;
