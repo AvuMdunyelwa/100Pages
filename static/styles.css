@@ -212,7 +212,7 @@ h6 {
     /* explore card */
     .card {
         margin: 0 !important;
-        height: 20dvh !important;
+        height: 20vh !important;
 
     }
 
@@ -269,7 +269,7 @@ h6 {
         overflow-y: hidden;
         white-space: nowrap;
         width: calc(100% + 24px);
-        height: 21dvh;
+        height: 21vh !important;
         padding: 0;
     }
 
@@ -278,6 +278,7 @@ h6 {
         width: 100%;
         overflow-x: auto;
         white-space: nowrap;
+        height: 100% !important;
     }
 
     .music-gallery .card {
@@ -287,7 +288,7 @@ h6 {
     }
 
     .music-gallery .card .card-img-top {
-        height: 100% !important;
+        height: 95% !important;
         object-fit: cover !important;
     }
 
