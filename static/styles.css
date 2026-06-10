@@ -284,18 +284,19 @@ h6 {
     .music-gallery .card {
         display: inline-block;
         max-width: 100% !important;
-        max-height: 18dvh !important;
+        max-height: 100% !important;
     }
 
     .music-gallery .card .card-img-top {
-        height: 95% !important;
+        height: 80% !important;
         object-fit: cover !important;
     }
 
     .music-gallery .card-body {
         width: 100% !important;
         padding-top: 0.2em !important;
-        max-height: 5dvh !important;
+        max-height: 20% !important;
+        padding-left: 0 !important;
     }
 
     .music-gallery .card-body img {
