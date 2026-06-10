@@ -1,7 +1,6 @@
-
 {% extends 'layout.html' %}
+<title> 100Pages | Profile</title>
 {% block content %}
-    <title> 100Pages | Profile</title>
      <section class='w-100 mt-2 p-4 review-list'>
         {% if message %}
         <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-50 start-50 translate-middle z-3" role="alert">
@@ -27,7 +26,7 @@
                                 {% endfor %}
                                 </div>
                                 <p class='comment' style="font-size: 0.9rem; font-style: italic; color: grey;">'{{ review.review_content }}'</p>
-                                <form class='like-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
+                                <form class='likes-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
                                     <button id='like-btn' type='submit' style="background: none; cursor: pointer;" >
                                         {% if review.liked %}
                                             <img src="static/heart-solid.svg" alt='like'/>
@@ -47,5 +46,4 @@
                 <p class='fs-6'>{{username}} haven't written any reviews yet.</p>
                 {% endif %}
             </section>
-           
 {% endblock %}
