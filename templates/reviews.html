@@ -38,7 +38,7 @@
                             <aside class='review-body' style="display: flex; flex-direction: column; justify-content: center;">
                                 <h2 class='music-title' style="font-size: 0.9rem; font-weight: 600;">{{ review.song_title }} by {{ review.artist }}</h2>
                                 <h5 class='username'style="margin: 0;" >
-                                    <a href="/user/{{ review.username }}" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
+                                    <a href="/user" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
                                         @{{ review.username }}
                                     </a>
                                 </h5>
@@ -58,6 +58,7 @@
                                     </button>
                                     <span class='like-count' style="font-size: 0.8rem; font-weight: 300;"> {{review.total_likes}} likes</span>
                                     <input type="hidden" name="review_id" value="{{ review.review_id }}"/>
+                                    <input type="hidden" name="review_user" value="{{ review.username }}"/>
                                 </form>
                             </aside>
                         </div>

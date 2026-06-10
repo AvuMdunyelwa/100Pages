@@ -43,7 +43,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-
 def get_elapsed_time(timestamp, locale="en"):
     if not timestamp:
         return "unknown"
@@ -333,8 +332,10 @@ def edit_review():
 
 
 @app.route("/user/<username>", methods=["GET"])
-def other_user_profile(username):
+def other_user_profile():
     """ view other users profiles """
+
+    username = request.form.get('review_user')
 
     user = db_execute("SELECT id, username FROM users WHERE username=%(username)s", username=username)
     if not user:
