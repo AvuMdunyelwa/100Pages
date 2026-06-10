@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timezone
 import timeago
 import os
@@ -11,6 +13,10 @@ from datetime import datetime, date
 from help import login_required
 from api import search_for_song
 
+load_dotenv()  # This must run first
+
+client_id = os.environ.get('CLIENT_ID')
+client_secret = os.environ.get('CLIENT_SECRET')
 
 # Database helper — replaces CS50 SQL
 def db_execute(query, **params):
