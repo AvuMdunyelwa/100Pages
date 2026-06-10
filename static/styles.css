@@ -271,11 +271,10 @@ h6 {
     }
 
     .music-gallery .row {
-        grid-template-columns: repeat(5, 35%) !important;
+        grid-template-columns: repeat(5, 32%) !important;
         width: 100%;
         overflow-x: auto;
         white-space: nowrap;
-        min-height: 21dvh !important;
     }
 
     .music-gallery .card {
