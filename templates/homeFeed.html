@@ -14,7 +14,7 @@
             <h6>Popular songs this week</h6>
             {% if popular_songs %}
             <div class="container music-gallery p-0" style="color: white; display: flex; align-items: center; justify-content: center; gap: 1em;">
-                <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(5, 2fr);">
+                <div class="row w-100 h-100 d-grid gap-2" style="grid-template-columns: repeat(5, 2fr);">
                 {% for song in popular_songs %}
                 <div class="card p-0" style="width: 100%; background-color: transparent; border: none;">
                     <img src="{{ song.cover_img_url }}" class="card-img-top" alt="..."style='max-width: 100%; height: 35vh; border-radius: 7px;'>
