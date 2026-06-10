@@ -161,7 +161,6 @@ h6 {
 
     #navbar li a,
     #navbar .dropdown {
-        color: white !important;
         font-weight: 700 !important;
         text-align: left !important;
     }
