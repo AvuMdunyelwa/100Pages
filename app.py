@@ -336,7 +336,7 @@ def other_user_profile():
     """ view other users profiles """
 
     username = request.form.get('review_user')
-    print('this is the user: ', username)
+    print('this is the username: ', username)
 
     user = db_execute("SELECT id, username FROM users WHERE username=%(username)s", username=username)
     if not user:
