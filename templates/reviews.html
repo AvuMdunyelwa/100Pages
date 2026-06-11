@@ -37,8 +37,8 @@
                             </div>
                             <aside class='review-body' style="display: flex; flex-direction: column; justify-content: center;">
                                 <h2 class='music-title' style="font-size: 0.9rem; font-weight: 600;">{{ review.song_title }} by {{ review.artist }}</h2>
-                                <div id="profile-user" style="display: block;">
-                                    <div id="profile-picture" style="display: block; height: 5vh; width: 5vw; background-color: #67BAF4;"></div>
+                                <div id="profile-user" style="display: flex; gap: 0.5em;">
+                                    <div id="profile-picture" style="display: block; height: 4vh; width: 2.5vw; background-color: #67BAF4; border-radius: 15px;"></div>
                                     <h5 class='username'style="margin: 0;" >
                                         <a href="/user/{{ review.username }}" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
                                             {{ review.username }}
