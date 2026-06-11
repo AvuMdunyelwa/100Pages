@@ -331,11 +331,10 @@ def edit_review():
     return redirect("/account?message=Review updated")
 
 
-@app.route("/user", methods=["GET"])
-def other_user_profile():
+@app.route("/user/<username>", methods=["GET"])
+def other_user_profile(username):
     """ view other users profiles """
 
-    username = request.form.get('review_user')
     print('this is the username: ', username)
 
     user = db_execute("SELECT id, username FROM users WHERE username=%(username)s", username=username)
