@@ -331,7 +331,7 @@ def edit_review():
     return redirect("/account?message=Review updated")
 
 
-@app.route("/user/<username>", methods=["GET"])
+@app.route("/user", methods=["GET"])
 def other_user_profile():
     """ view other users profiles """
 
