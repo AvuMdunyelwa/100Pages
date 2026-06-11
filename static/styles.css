@@ -186,9 +186,10 @@ h6 {
 
     /* notifications */
     #activity-notifications {
-        padding: 1em;
-        top: 1%;
+        padding: 1em !important;
+        top: 1% !important;
     }
+
     #activity-notifications .row {
         height: 10vh !important;
     }
