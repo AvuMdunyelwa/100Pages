@@ -46,17 +46,17 @@
                                     </h5>
                                 </div>
                                 <div class='rating' style="display: flex; gap: 0.2em; padding: 0.5em 0;">
-                                {% for i in range(review.rating) %}
+                                    {% for i in range(review.rating) %}
                                     <img src='static/star-solid.svg' alt='like' style="max-width: 6%;"/>
-                                {% endfor %}
+                                    {% endfor %}
                                 </div>
                                 <p class='comment' style="font-size: 0.9rem; font-style: italic; color: grey;">'{{ review.review_content }}'</p>
                                 <form class='likes-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
                                     <button id='like-btn' type='submit' style="background: none; cursor: pointer;" >
                                         {% if review.liked %}
-                                            <img src='static/heart-solid.svg' alt='like'/>
+                                        <img src='static/heart-solid.svg' alt='like'/>
                                         {% else %}
-                                            <img src='static/heart.svg' alt='like'/>
+                                        <img src='static/heart.svg' alt='like'/>
                                         {% endif %}
                                     </button>
                                     <span class='like-count' style="font-size: 0.8rem; font-weight: 300;"> {{review.total_likes}} likes</span>
@@ -67,12 +67,15 @@
                         {% endfor %}
                     </div>
                     <div class="container d-flex flex-column align-items-center w-25 m-0 pt-2 pb-2" id="top-reviewers" style="background-color: #67BAF4; border-radius: 7px; color: white; height: fit-content;">
-                       <h6>Top reviewers</h6>
+                        <h6>Top reviewers</h6>
                         <div class="row w-100 mt-0 pt-0 d-grid gap-2">
                             {% for reviewer in top_reviewers %}
                             <div class="col p-0" style="height: fit-content; border-bottom: 1px solid #0D1B2A;">
                                 <div class='top-reviewer-card d-grid gap-1 p-1'>
-                                    <h5 class='username' style="margin: 0; color: white;"><a href="/user/{{reviewer.username}}" style="color: white; text-decoration: none;">{{ reviewer.username }}</a></h5>
+                                    <div id="profile-user" style="display: flex; gap: 0.5em; align-items: center;">
+                                        <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
+                                        <h5 class='username' style="margin: 0; color: white;"><a href="/user/{{reviewer.username}}" style="color: white; text-decoration: none;">{{ reviewer.username }}</a></h5>
+                                    </div>
                                     <p class='review-count' style="margin: 0; color: black; font-size: 0.9rem;">{{ reviewer.review_count }} reviews</p>
                                 </div>
                             </div>
