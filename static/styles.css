@@ -185,6 +185,10 @@ h6 {
     }
 
     /* notifications */
+    #activity-notifications {
+        padding: 1em;
+        top: 1%;
+    }
     #activity-notifications .row {
         height: 10vh !important;
     }
@@ -195,16 +199,16 @@ h6 {
     }
 
     #activity-notifications .card-img-top {
-        max-width: 20% !important;
+        max-width: 17% !important;
         height: 100%;
     }
 
     #activity-notifications .card-body p {
-        font-size: 0.5rem !important;
+        font-size: 0.6rem !important;
     }
 
     #activity-notifications .card-body span {
-        font-size: 0.3rem !important;
+        font-size: 0.4rem !important;
     }
 
     /* section */
