@@ -185,12 +185,18 @@ h6 {
     }
 
     /* notifications */
+    #activity-notifications .row {
+        height: 10vh !important;
+    }
+
     #activity-notifications .row .card {
         width: 100% !important;
+        max-height: 100% !important;
     }
 
     #activity-notifications .card-img-top {
-        max-width: 30% !important;
+        max-width: 20% !important;
+        height: 100%;
     }
 
     #activity-notifications .card-body p {
