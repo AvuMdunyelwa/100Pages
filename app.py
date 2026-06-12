@@ -425,5 +425,3 @@ def store_profile_pic():
     """ store the users profile picture """
     imgUrl = request.form.get('addprofile')
     print(imgUrl)
-
-store_profile_pic()
