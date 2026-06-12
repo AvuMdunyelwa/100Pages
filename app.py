@@ -231,7 +231,7 @@ def profile():
     user_id = session["user_id"]
     userstats = db_execute("SELECT COUNT(DISTINCT reviews.id) AS total_reviews, COUNT(likes.id) AS total_likes, users.username AS username FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY users.id, users.username", user_id=user_id)
     print(userstats)
-    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist;", user_id=user_id)
+    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist;", user_id=user_id)
     return render_template("profile.html", reviews=reviews, userstats=userstats, message=message)
 
 
