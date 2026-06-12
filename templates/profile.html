@@ -9,12 +9,12 @@
         {% endif %}
         <div id="user-profile-info" style=" border-bottom: 1px solid grey; margin: 2rem; display: flex; align-items: center; height: 15%; width: 50%; gap: 1em;">
             <form action="/store-pp" method="post" id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-image: url('static/track2.png'); background-position: center; background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
-                <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center;">
+                <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; display: none;">
                     <!-- Hidden file input -->
                     <input type="file" name="addimage" id="add-pp-input" accept="image/*" style="display: none !important;">
                 
                     <!-- Only visible element -->
-                    <img src="static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 50%; height: 50%; display: none;">
+                    <img src="static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 50%; height: 50%;">
                 </label>
             </form>
             <aside id="user-info">

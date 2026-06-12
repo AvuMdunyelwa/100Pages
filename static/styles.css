@@ -144,8 +144,8 @@ h6 {
     }
 
 /* prifile */
-#profile-picture:hover .add-pp {
-    display: block;
+#profile-picture:hover label {
+    display: block !important;
 }
 
 /* ─── MOBILE ─────────────────────────────────────── */
