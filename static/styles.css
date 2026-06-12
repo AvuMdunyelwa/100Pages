@@ -143,6 +143,11 @@ h6 {
         overflow-x: hidden;
     }
 
+/* prifile */
+#profile-picture:hover .add-pp {
+    display: block;
+}
+
 /* ─── MOBILE ─────────────────────────────────────── */
 @media (max-width: 430px) {
 
