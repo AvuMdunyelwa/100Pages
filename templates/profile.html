@@ -7,17 +7,15 @@
                 <strong>{{message}}</strong>
         </div>
         {% endif %}
-        <div id="user-profile-info" style="border-bottom: 1px rgb(255, 255, 255); margin-top: 2rem;">
-            <div id="profile-user" style="display: flex; gap: 0.5em; align-items: center; color: white;">
-                <div id="profile-picture" style="display: block; height: 10vh; width: 5vw; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
+        <div id="user-profile-info" style="border: 2px rgb(255, 255, 255); margin-top: 2rem; display: flex; align-items: center; height: 10vh; width: 15vw;">
+            <div id="profile-picture" style="display: block; height: 90%; width: 20%; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
+            <aside id="user-stats">
                 <h5 class='username' style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
                     {{userstats[0].username}}
                 </h5>
-            </div>
-            <div>
-                <span>{{userstats[0].total_reviews}}<br> Reviews</span>
-                <span>{{userstats[0].total_likes}}<br> Likes</span>
-            </div>
+                <span>{{userstats[0].total_reviews}} Reviews</span>
+                <span>{{userstats[0].total_likes}} Likes</span>
+            </aside>
         </div>
         {% if reviews %}
                 <div class="container-fluid" style="color: white;">
