@@ -419,7 +419,7 @@ def get_activity():
 
     return render_template('notifications.html', notifications=notifications)
     
-@app.route('/store-pp', methods=["GET"])
+@app.route('/store-pp', methods=["POST"])
 @login_required
 def store_profile_pic():
     """ store the users profile picture """
