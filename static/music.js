@@ -3,10 +3,11 @@ const clearInput = document.querySelector('.close');
 const formInput = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
 const likesForm = document.querySelectorAll('.likes-form');
 const likeBtn = document.querySelectorAll('#like-btn');
-const togglePassword = document.querySelector('#toggle-password')
-const password = document.querySelector('#password-field')
-const confirmPassword = document.querySelector('#confirm-password-toggle')
-const passwordAgain = document.querySelector('#confirm-password')
+const togglePassword = document.querySelector('#toggle-password');
+const password = document.querySelector('#password-field');
+const confirmPassword = document.querySelector('#confirm-password-toggle');
+const passwordAgain = document.querySelector('#confirm-password');
+const addImage = document.querySelector('.add-pp');
 let liked = true;
 
 window.onscroll = function () {
@@ -161,3 +162,14 @@ likeBtn.forEach((btn) => {
         }
     });
 })
+
+// add image and display to the profile picture
+addImage.addEventListener('change', profilePic);
+
+//adding the book cover
+function profilePic(e) {
+    const imageView = document.querySelector('#profile-picture');
+    let selectedImage = e.target.files[0];
+    createObjectURL= URL.createObjectURL(selectedImage);
+    imageView.style.backgroundImage = `url(${createObjectURL})`;
+};
