@@ -424,4 +424,4 @@ def get_activity():
 def store_profile_pic():
     """ store the users profile picture """
     imgUrl = request.form.get('addprofile')
-    print(imgUrl)
+    print('image fetched: ', imgUrl)
