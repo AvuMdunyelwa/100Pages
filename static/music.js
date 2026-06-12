@@ -164,7 +164,7 @@ likeBtn.forEach((btn) => {
 })
 
 // add image and display to the profile picture
-addImage.addEventListener('change', profilePic);
+addImage.addEventListener('change', profilePic());
 
 //adding the book cover
 function profilePic(e) {
