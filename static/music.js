@@ -169,7 +169,9 @@ addImage.addEventListener('change', profilePic);
 //adding the book cover
 function profilePic(e) {
     const imageView = document.querySelector('#profile-picture');
+    console.log(imageView);
     let selectedImage = e.target.files[0];
+    console.log('image-selected: ', selectedImage);
     createObjectURL= URL.createObjectURL(selectedImage);
     imageView.style.backgroundImage = `url(${createObjectURL})`;
 };
