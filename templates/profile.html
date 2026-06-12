@@ -7,16 +7,16 @@
                 <strong>{{message}}</strong>
         </div>
         {% endif %}
-        <div id="user-profile-info" style="border: 1px solid grey;">
-            <div id="profile-user" style="display: flex; gap: 0.5em; align-items: center;">
-                <div id="profile-picture" style="display: block; height: 7vh; width: 3.5vw; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
+        <div id="user-profile-info" style="border-bottom: 1px rgb(255, 255, 255); margin-top: 2rem;">
+            <div id="profile-user" style="display: flex; gap: 0.5em; align-items: center; color: white;">
+                <div id="profile-picture" style="display: block; height: 10vh; width: 5vw; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
                 <h5 class='username' style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
-                    {{ userstats.username }}
+                    {{ userstats[0]['username'] }}
                 </h5>
             </div>
             <div>
-                <span>{{userstats.total_reviews}}<br> Reviews</span>
-                <span>{{userstats.total_likes}}<br> Likes</span>
+                <span>{{userstats[0][total_reviews']}}<br> Reviews</span>
+                <span>{{userstats[0]['total_likes']}}<br> Likes</span>
             </div>
         </div>
         {% if reviews %}
