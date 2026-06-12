@@ -7,14 +7,14 @@
                 <strong>{{message}}</strong>
         </div>
         {% endif %}
-        <div id="user-profile-info" style="border: 2px rgb(255, 255, 255); margin-top: 2rem; display: flex; align-items: center; height: 10vh; width: 15vw;">
-            <div id="profile-picture" style="display: block; height: 90%; width: 20%; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
+        <div id="user-profile-info" style="margin: 2rem; display: flex; align-items: center; height: 15%; width: 50%; gap: 1em;">
+            <div id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 15px; background-image: url('static/track2.png'); background-position: center; background-size: cover;"></div>
             <aside id="user-stats">
-                <h5 class='username' style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
+                <h5 class='username' style="font-size: 2rem; color: var(--primary-color); text-decoration: none; height: fit-content; font-weight: 600;">
                     {{userstats[0].username}}
                 </h5>
-                <span>{{userstats[0].total_reviews}} Reviews</span>
-                <span>{{userstats[0].total_likes}} Likes</span>
+                <span style="color: aliceblue; font-weight: 500;">{{userstats[0].total_reviews}}<br>Reviews</span>
+                <span style="color: aliceblue; font-weight: 500;">{{userstats[0].total_likes}}<br>Likes</span>
             </aside>
         </div>
         {% if reviews %}
