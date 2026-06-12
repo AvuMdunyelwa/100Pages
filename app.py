@@ -229,9 +229,9 @@ def profile():
     """ get users reviews """
     message = request.args.get('message')
     user_id = session["user_id"]
-    username = db_execute("SELECT username FROM users WHERE id=%(id)s", id=user_id)
-    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes, (SELECT COUNT(*) FROM likes JOIN reviews r ON likes.review_id = r.id WHERE r.user_id = %(user_id)s) AS total_likes_received, (SELECT COUNT(*) FROM reviews WHERE user_id = 1) AS total_reviews FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = 1 GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist", user_id=user_id)
-    return render_template("profile.html", username=username[0]['username'], reviews=reviews, message=message)
+    userstats = db_execute("SELECT COUNT(DISTINCT reviews.id) AS total_reviews, COUNT(likes.id) AS total_likes, users.username AS username FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY users.id, users.username", user_id=user_id)
+    reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist;", user_id=user_id)
+    return render_template("profile.html", reviews=reviews, userstats=userstats, message=message)
 
 
 @app.route("/reviews", methods=["GET"])
