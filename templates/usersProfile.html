@@ -29,9 +29,9 @@
                                 <form class='likes-form m-0 align-items-center gap-1' action='/likes' method='post' id='likes-form' style="width: 100%; height: 5vh;">
                                     <button id='like-btn' type='submit' style="background: none; cursor: pointer;" >
                                         {% if review.liked %}
-                                            <img src="static/heart-solid.svg" alt='like'/>
+                                            <img src="/static/heart-solid.svg" alt='like'/>
                                         {% else %}
-                                            <img src="static/heart.svg" alt='like'/>
+                                            <img src="/static/heart.svg" alt='like'/>
                                         {% endif %}
                                     </button>
                                     <span class='like-count' style="font-size: 0.8rem; font-weight: 300;"> {{review.total_likes}} likes</span>
