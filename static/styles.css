@@ -145,7 +145,7 @@ h6 {
 
 /* prifile */
 #profile-picture:hover label {
-    display: block !important;
+    display: flex !important;
 }
 
 /* ─── MOBILE ─────────────────────────────────────── */
