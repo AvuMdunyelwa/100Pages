@@ -7,7 +7,7 @@ const togglePassword = document.querySelector('#toggle-password');
 const password = document.querySelector('#password-field');
 const confirmPassword = document.querySelector('#confirm-password-toggle');
 const passwordAgain = document.querySelector('#confirm-password');
-const addImage = document.querySelector('.add-pp-input');
+const addImage = document.querySelector('#add-pp-input');
 let liked = true;
 
 window.onscroll = function () {
