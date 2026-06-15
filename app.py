@@ -5,6 +5,7 @@ import timeago
 import os
 import psycopg2
 import psycopg2.extras
+import supabase
 from flask import *
 from flask import Flask, redirect, render_template, request, session, jsonify
 from flask_session import Session
@@ -13,10 +14,7 @@ from datetime import datetime, date
 from help import login_required
 from api import search_for_song
 
-load_dotenv()  # This must run first
 
-client_id = os.environ.get('CLIENT_ID')
-client_secret = os.environ.get('CLIENT_SECRET')
 
 # Database helper — replaces CS50 SQL
 def db_execute(query, **params):
@@ -423,5 +421,23 @@ def get_activity():
 @login_required
 def store_profile_pic():
     """ store the users profile picture """
-    imgUrl = request.form.get('addprofile')
-    print('image fetched: ', imgUrl)
+
+    user_id = request.session.get('user_id')
+    img_file = request.files.get('addprofile')
+    imgBytes = img_file.read()
+
+    if not imgBytes:
+        return redirect(url_for('account', message='upload a valid image file'))
+    
+    filename = f'{user_id}-pp'
+    img_path = f"profile-pics/{user_id}/{filename}"
+
+    # store image to the storage
+    upload = supabase.storage.from_('100Pages-storage').upload(img_path, imgBytes)
+
+    if upload:
+        img_url = supabase.storage.from_('100Pages-storage').get_public_url(img_path)
+        db_execute('UPDATE users SET profile_img = %(url)s WHERE id = %(id)s', url=img_url, id=user_id)
+        return redirect(url_for('account'))
+    else:
+        return redirect(url_for('account', message='image failed to upload'))
