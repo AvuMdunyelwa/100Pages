@@ -19,13 +19,13 @@
                 </label>
             </form>
         {% else %}
-            <form action="/store-pp" method="post" id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-position: center; background-image: url('static/profile-placeholder.png'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
+            <form action="/store-pp" method="post" id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-position: center; background-image: url('/static/profile-placeholder.png'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
                 <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
                     <!-- Hidden file input -->
                     <input type="file" name="addprofile" id="add-pp-input" accept="image/*" style="display: none !important;">
                 
                     <!-- Only visible element -->
-                    <img src="static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
+                    <img src="/static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
                 </label>
             </form>
         {% endif %}
