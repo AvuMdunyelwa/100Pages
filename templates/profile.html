@@ -8,7 +8,7 @@
         </div>
         {% endif %}
         <div id="user-profile-info" style=" border-bottom: 1px solid grey; margin: 2rem; display: flex; align-items: center; height: 15%; width: 50%; gap: 1em;">
-        {% if userstats.profile_pic != "None" %}
+        {% if userstats.profile_pic is not None %}
             <form action="/store-pp" method="post" id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-position: center; background-image: url({{userstats.profile_pic}}); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
                 <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
                     <!-- Hidden file input -->
