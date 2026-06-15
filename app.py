@@ -422,6 +422,7 @@ def get_activity():
 def store_profile_pic():
     """ store the users profile picture """
 
+    print('route reached!')
     user_id = request.session.get('user_id')
     img_file = request.files.get('addprofile')
     imgBytes = img_file.read()
