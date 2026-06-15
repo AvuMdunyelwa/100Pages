@@ -7,5 +7,6 @@ pytz
 psycopg2-binary
 requests
 spotipy
+supabase
 timeago
 
