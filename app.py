@@ -434,7 +434,7 @@ def store_profile_pic():
 
     # store image to the storage
     upload = supabase.storage.from_('100Pages-storage').upload(img_path, imgBytes)
-
+    print(upload)
     if upload:
         img_url = supabase.storage.from_('100Pages-storage').get_public_url(img_path)
         db_execute('UPDATE users SET profile_img = %(url)s WHERE id = %(id)s', url=img_url, id=user_id)
