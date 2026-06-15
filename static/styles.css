@@ -144,6 +144,10 @@ h6 {
     }
 
 /* prifile */
+#profile-picture {
+    background-image: url('static/profile_placeholder.png');
+}
+
 #profile-picture:hover label {
     display: flex !important;
 }
