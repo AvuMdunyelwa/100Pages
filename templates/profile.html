@@ -6,11 +6,9 @@
         <div class="alert alert-warning alert-dismissible fade show w-50 p-20 d-flex justify-content-between position-fixed top-50 start-50 translate-middle z-3" role="alert">
                 <strong>{{message}}</strong>
         </div>
-        {% endif %}
-        {{ userstats.profile_pic }}
-        {{ userstats.profile_pic is none }} 
+        {% endif %} 
         <div id="user-profile-info" style=" border-bottom: 1px solid grey; margin: 2rem; display: flex; align-items: center; height: 15%; width: 50%; gap: 1em;">
-        {% if userstats.profile_pic is not none %}
+        {% if userstats[0].profile_pic is not none %}
             <form action="/store-pp" method="post" id="profile-picture" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-position: center; background-image: url({{userstats.profile_pic}}); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
                 <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
                     <!-- Hidden file input -->
