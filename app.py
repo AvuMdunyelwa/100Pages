@@ -437,7 +437,7 @@ def store_profile_pic():
     img_path = f"profile-pics/{user_id}/{filename}"
 
     # store image to the storage
-    upload = supabase.storage.from_('100Pages-storage').upload(img_path, imgBytes, {'upsert': 'true'})
+    upload = supabase.storage.from_('100Pages-storage').upload(img_path, imgBytes, {'upsert': 'true', 'content-type': img_file.mimetype})
     print('is it uploaded: ', upload)
     if upload:
         img_url = supabase.storage.from_('100Pages-storage').get_public_url(img_path)
