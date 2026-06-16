@@ -444,4 +444,4 @@ def store_profile_pic():
         db_execute('UPDATE users SET profile_img = %(url)s WHERE id = %(id)s', url=img_url, id=user_id)
         return redirect(url_for('account'))
     else:
-        return redirect(url_for('account', message='image failed to upload'))
+        return redirect(url_for('profile', message='image failed to upload'))
