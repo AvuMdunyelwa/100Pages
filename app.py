@@ -1,11 +1,9 @@
 import os
-from dotenv import load_dotenv
 from datetime import datetime, timezone
 import timeago
 import os
 import psycopg2
 import psycopg2.extras
-import supabase
 from flask import *
 from flask import Flask, redirect, render_template, request, session, jsonify
 from flask_session import Session
@@ -13,8 +11,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, date
 from help import login_required
 from api import search_for_song
+from supabase import create_client
 
-
+# access supabase storage
+supabase = create_client(
+    os.environ.get('SUPABASE_URL'),
+    os.environ.get('SUPABASE_KEY')
+)
 
 # Database helper — replaces CS50 SQL
 def db_execute(query, **params):
