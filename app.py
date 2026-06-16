@@ -87,7 +87,7 @@ def after_request(response):
 def landing_page():
     message = request.args.get('message')
     popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating, COUNT(*) AS review_count FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days' GROUP BY track_id ORDER BY review_count DESC, AVG(rating) DESC LIMIT 5")
-    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10")
 
     if session.get('user_id'):
         user_id = session['user_id']
@@ -250,7 +250,7 @@ def reviews():
         else:
             review["liked"] = False
 
-    top_reviewers = db_execute("SELECT username, COUNT(reviews.id) AS review_count FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5")
+    top_reviewers = db_execute("SELECT username, COUNT(reviews.id) AS review_count, profile_img AS profile_pic FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5")
 
     return render_template("reviews.html", reviews=reviews, popular_songs=popular_songs, top_reviewers=top_reviewers)
 
