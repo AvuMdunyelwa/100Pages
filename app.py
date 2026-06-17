@@ -241,7 +241,7 @@ def reviews():
     """ get all reviews """
 
     popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
-    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic COUNT(likes.review_id) AS total_likes, MAX(reviews.created_at) AS created_at FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img ORDER BY created_at DESC LIMIT 10")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic, COUNT(likes.review_id) AS total_likes, MAX(reviews.created_at) AS created_at FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img ORDER BY created_at DESC LIMIT 10")
 
     for review in reviews:
         if session.get('user_id'):
