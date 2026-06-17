@@ -41,7 +41,7 @@
                                 {% if review.profile_pic is not none %}
                                     <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-position: center; background-image: url('{{review.profile_pic}}'); background-size: cover;"></div>
                                 {% else %}
-                                    <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-position: center; background-image: url('static/profile_placeholder.png'); background-size: cover;"></div>
+                                    <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-position: center; background-image: url('/static/profile_placeholder.png'); background-size: cover;"></div>
                                 {% endif %}
                                     <h5 class='username'style="margin: 0;" >
                                         <a href="/user/{{ review.username }}" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: none; height: fit-content;">
