@@ -250,7 +250,7 @@ def reviews():
         else:
             review["liked"] = False
 
-    top_reviewers = db_execute("SELECT username, COUNT(reviews.id) AS review_count, profile_img AS profile_pic FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username ORDER BY COUNT(reviews.id) DESC LIMIT 5")
+    top_reviewers = db_execute("SELECT username, COUNT(reviews.id) AS review_count, profile_img AS profile_pic FROM users JOIN reviews ON reviews.user_id = users.id GROUP BY users.id, users.username, users.profile_img ORDER BY COUNT(reviews.id) DESC LIMIT 5")
 
     return render_template("reviews.html", reviews=reviews, popular_songs=popular_songs, top_reviewers=top_reviewers)
 
