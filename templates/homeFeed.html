@@ -65,7 +65,7 @@
                             <aside class='review-body' style="display: flex; flex-direction: column; justify-content: center;">
                                 <h2 class='music-title' style="font-size: 0.9rem; font-weight: 600;">{{ review.song_title }} by {{ review.artist }}</h2>
                                 <div id="profile-user" style="display: flex; gap: 0.5em; align-items: center;">
-                                {% if review.profile_img is not none %}
+                                {% if review.profile_pic is not none %}
                                     <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-position: center; background-image: url('{{review.profile_img}}''); background-size: cover;"></div>
                                 {% else %}
                                     <div id="profile-picture" style="display: block; height: 5vh; width: 2.5vw; border-radius: 15px; background-position: center; background-image: url(static/profile-placeholder.png); background-size: cover;"></div>
