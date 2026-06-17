@@ -87,7 +87,7 @@ def after_request(response):
 def landing_page():
     message = request.args.get('message')
     popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating, COUNT(*) AS review_count FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days' GROUP BY track_id ORDER BY review_count DESC, AVG(rating) DESC LIMIT 5")
-    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY total_likes DESC LIMIT 10")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img ORDER BY total_likes DESC LIMIT 10")
 
     if session.get('user_id'):
         user_id = session['user_id']
@@ -241,7 +241,7 @@ def reviews():
     """ get all reviews """
 
     popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating FROM reviews GROUP BY track_id ORDER BY AVG(rating) DESC LIMIT 5")
-    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes, MAX(reviews.created_at) AS created_at FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username ORDER BY created_at DESC LIMIT 10")
+    reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, COUNT(likes.review_id) AS total_likes, MAX(reviews.created_at) AS created_at FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile.img ORDER BY created_at DESC LIMIT 10")
 
     for review in reviews:
         if session.get('user_id'):
@@ -390,7 +390,7 @@ def reset_Password():
 
     hashed_password = generate_password_hash(new_password)
     db_execute("UPDATE users SET password_hash=%(password_hash)s WHERE id=%(id)s", password_hash=hashed_password, id=user_id)
-    return redirect('/login?message=Password reset successful')
+    return redirect("/login?message='Password reset successful'")
 
 
 @app.route('/newsLetter', methods=["POST"])
@@ -442,6 +442,6 @@ def store_profile_pic():
     if upload:
         img_url = supabase.storage.from_('100Pages-storage').get_public_url(img_path)
         db_execute('UPDATE users SET profile_img = %(url)s WHERE id = %(id)s', url=img_url, id=user_id)
-        return redirect(url_for('account'))
+        return redirect('/profile')
     else:
         return redirect(url_for('profile', message='image failed to upload'))
