@@ -428,12 +428,12 @@ h6 {
         width: 90% !important;
         margin: 1rem !important;
 
-        #profile-picture {
+        .pp {
             width: 40% !important;
         }
     }
 
-    .pp {
+    #profile-picture {
         height: 3vh !important; 
         width: 5vw !important;
         border-radius: 35px !important;
