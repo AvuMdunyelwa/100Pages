@@ -9,7 +9,7 @@
         {% endif %} 
         <div id="user-profile-info" style=" border-bottom: 1px solid grey; margin: 2rem; display: flex; align-items: center; height: 15%; width: 50%; gap: 1em;">
         {% if userstats[0].profile_pic is not none %}
-            <form action="/store-pp" method="post" id="profile-picture" enctype="multipart/form-data" style="display: block; height: 80%; width: 19%; border-radius: 60px; background-position: center; background-image: url('{{userstats[0].profile_pic}}'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
+            <form action="/store-pp" method="post" id="profile-picture" enctype="multipart/form-data" style="display: block; height: 80%; width: 20%; border-radius: 60px; background-position: center; background-image: url('{{userstats[0].profile_pic}}'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
                 <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
                     <!-- Hidden file input -->
                     <input type="file" name="addprofile" id="add-pp-input" accept="image/*" onchange="this.form.submit()" style="display: none !important;">
