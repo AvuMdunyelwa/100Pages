@@ -428,13 +428,13 @@ h6 {
         width: 90% !important;
         margin: 1rem !important;
 
-        .pp {
-            width: 17% !important;
-        }
+    }
+    #user-profile-info .pp {
+        width: 17% !important;
+    }
 
-        #user-info {
-            font-size: 1.2rem !important;
-        }
+    #user-profile-info #user-info {
+        font-size: 1.2rem !important;
     }
 
     #profile-picture {
