@@ -427,11 +427,7 @@ h6 {
     #user-profile-info {
         width: 90% !important;
         margin: 1rem !important;
-
-    }
-
-    #user-profile-info form {
-        width: 20% !important;
+        margin-top: 2rem;
     }
 
     #user-profile-info #user-info h5 {
