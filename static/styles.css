@@ -433,7 +433,7 @@ h6 {
         }
     }
 
-    #profile-picture {
+    .pp {
         height: 3vh !important; 
         width: 5vw !important;
         border-radius: 35px !important;
