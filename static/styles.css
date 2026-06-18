@@ -429,11 +429,11 @@ h6 {
         margin: 1rem !important;
 
     }
-    #user-profile-info .pp {
+    #user-profile-info form {
         width: 17% !important;
     }
 
-    #user-profile-info #user-info {
+    #user-profile-info #user-info h5 {
         font-size: 1.2rem !important;
     }
 
