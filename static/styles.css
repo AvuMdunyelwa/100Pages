@@ -144,7 +144,7 @@ h6 {
     }
 
 
-#profile-picture:hover label {
+.pp:hover label {
     display: flex !important;
 }
 
@@ -429,7 +429,7 @@ h6 {
         margin: 1rem !important;
 
         .pp {
-            width: 40% !important;
+            width: 30% !important;
         }
     }
 
