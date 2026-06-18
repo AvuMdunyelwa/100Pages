@@ -424,9 +424,19 @@ h6 {
         margin-top: 1em !important;
     }
 
+    #user-profile-info {
+        width: 90% !important;
+        margin: 1rem !important;
+
+        #profile-picture {
+            width: 40% !important;
+        }
+    }
+
     #profile-picture {
         height: 3vh !important; 
         width: 5vw !important;
         border-radius: 35px !important;
     }
+
 }
