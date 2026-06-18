@@ -423,4 +423,10 @@ h6 {
         width: 100% !important;
         margin-top: 1em !important;
     }
+
+    #profile-picture {
+        height: 3vh !important; 
+        width: 5vw !important;
+        border-radius: 35px !important;
+    }
 }
