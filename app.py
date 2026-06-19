@@ -442,6 +442,6 @@ def store_profile_pic():
     if upload:
         img_url = supabase.storage.from_('100Pages-storage').get_public_url(img_path)
         db_execute('UPDATE users SET profile_img = %(url)s WHERE id = %(id)s', url=img_url, id=user_id)
-        return redirect('/profile')
+        return redirect('/account')
     else:
         return redirect(url_for('profile', message='image failed to upload'))
