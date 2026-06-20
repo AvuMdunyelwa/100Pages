@@ -435,8 +435,13 @@ h6 {
     }
 
     #user-profile-info .pp {
-        width: 20vw !important;
-        height: 11vh !important;
+        width: 18vw !important;
+        height: 10vh !important;
+        margin-left: 0 !important;
+    }
+
+    #userstats .btn {
+        width: 35% !important;
     }
 
     #profile-picture {
