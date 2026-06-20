@@ -427,11 +427,16 @@ h6 {
     #user-profile-info {
         width: 90% !important;
         margin: 1rem !important;
-        margin-top: 2rem;
+        margin-top: 3rem;
     }
 
     #user-profile-info #user-info h5 {
         font-size: 1.2rem !important;
+    }
+
+    #user-profile-info {
+        width: 2vw !important;
+        height: 11vh !important;
     }
 
     #profile-picture {
