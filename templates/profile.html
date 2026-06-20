@@ -36,7 +36,10 @@
                 <div id="user-stats" style="color: rgb(225, 225, 225); font-weight: 500; font-size: 1rem;">
                     <span>{{userstats[0].total_reviews}} Reviews</span> <span> | </span> <span>{{userstats[0].total_likes}} Likes</span>
                 </div>
-                <button class="profile-btn btn btn-primary btn" type="submit" style="background-color: #67BAF4;">Edit Profile</button>
+                <button class="profile-btn btn btn-primary btn" type="submit" method="get" data-bs-toggle="modal" data-bs-target="#editProfileModal" data-bs-id="{{userstats.user_id}}"
+                    data-bs-username="{{userstats.username}}" data-bs-name="{{userstats.name}}" data-bs-surname="{{userstats.surname}}" data-bs-profileImg="{{userstats.profile_pic}} style="background-color: #67BAF4;">
+                    Edit Profile
+                </button>
             </aside>
         </div>
         {% if reviews %}
@@ -108,6 +111,45 @@
                         <input type="hidden" name="review_id" value='' id="reviewId" />
                         <input type="hidden" name="song_title" value='' id="songTitle" />
                         <input type="hidden" name="artist" value='' id="artist" />
+                    </form>
+                </div>
+            </div>
+             <!-- edit profile Modal -->
+            <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form class="modal-content edit-review" action="/edit-profile" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Profile</h5>
+                        </div>
+                        <div class="modal-body m-0 mx-100 d-grid">
+                            <form action="/store-pp" method="post" class="pp" enctype="multipart/form-data" style="display: block; height: 22vh; width: 11vw; border-radius: 60px; background-position: center; background-image: url('static/profile-placeholder.png'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
+                                <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
+                                    <!-- Hidden file input -->
+                                    <input type="file" name="addprofile" id="add-pp-input" accept="image/*" onchange="this.form.submit()" style="display: none !important;">
+                                    <!-- Only visible element -->
+                                    <img src="/static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
+                                </label>
+                            </form>
+                            <div class="mb-3 w-100 m-0">
+                                <input type="text" class="form-control h-50" autocomplete='off' name="username" id="name" placeholder="Enter username">
+                            </div>
+                            <div class="mb-3 w-100 m-0" style="display: flex; gap: 0.5em;">
+                                <input type="text" class="form-control h-50" autocomplete='off' name="name" id="name" placeholder="Enter name">
+                                <input type="text" class="form-control h-50" autocomplete='off' name="surname" id="surname" placeholder="Enter surname">
+                            </div>
+                            <div class="mb-3 w-100 m-0">
+                                <input type="text" class="form-control h-50" autocomplete='off' name="email" id="surname" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn" style="background-color: #67BAF4; color: white;">Save</button>
+                        </div>
+                        <input type="hidden" name="user_id" value='' id="userId" />
+                        <input type="hidden" name="username" value='' id="username" />
+                        <input type="hidden" name="name" value='' id="name" />
+                        <input type="hidden" name="surname" value='' id="surname" />
+                        <input type="hidden" name="email" value='' id="email" />
                     </form>
                 </div>
             </div>

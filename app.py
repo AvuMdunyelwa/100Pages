@@ -230,7 +230,7 @@ def profile():
     """ get users reviews """
     message = request.args.get('message')
     user_id = session["user_id"]
-    userstats = db_execute("SELECT COUNT(DISTINCT reviews.id) AS total_reviews, COUNT(likes.id) AS total_likes, users.username AS username, users.profile_img AS profile_pic FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY users.id, users.username", user_id=user_id)
+    userstats = db_execute("SELECT COUNT(DISTINCT reviews.id) AS total_reviews, COUNT(likes.id) AS total_likes, users.username AS username, users.profile_img AS profile_pic, users.id, users.name, users.surname, users.email FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY users.id, users.username, users.id, users.name, users.surname, users.email", user_id=user_id)
     print(userstats)
     reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist;", user_id=user_id)
     return render_template("profile.html", reviews=reviews, userstats=userstats, message=message)
@@ -288,8 +288,6 @@ def like_review():
         db_execute('INSERT INTO notifications (recipient_id, sender_id, type, review_id, is_read) VALUES(%(recipient_id)s, %(sender_id)s, %(type)s, %(review_id)s, %(is_read)s)',
                 recipient_id=recipient_id[0]['user_id'], sender_id=user_id, type='received_like', review_id=review_id, is_read=False)
 
-    
-
     results = db_execute("SELECT COUNT(*) AS total_likes FROM likes WHERE review_id=%(rid)s", rid=review_id)
     total_likes = results[0]['total_likes']
 
@@ -308,7 +306,7 @@ def delete_review(review_id):
         return redirect("/account")
 
     db_execute("DELETE FROM reviews WHERE id=%(id)s", id=review_id)
-    return redirect("/account")
+    return redirect("/account?message=Review deleted")
 
 
 @app.route("/edit-review", methods=["POST"])
