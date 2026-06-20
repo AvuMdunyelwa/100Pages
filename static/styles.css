@@ -441,7 +441,9 @@ h6 {
     }
 
     #user-info .btn {
-        width: 35% !important;
+        width: 70% !important;
+        height: 4vh !important;
+        font-size: 0.8rem !important;
     }
 
     #profile-picture {
