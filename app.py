@@ -341,9 +341,13 @@ def other_user_profile(username):
     if not user:
         return redirect("/")
 
+    # if current user login in
     if session.get('user_id') == user[0]['id']:
         return redirect('/account')
 
+    # get users details and reviews
+    profilestats = db_execute("SELECT COUNT(DISTINCT reviews.id) AS total_reviews, COUNT(likes.id) AS total_likes, users.username AS username, users.profile_img AS profile_pic, users.id, users.name, users.surname, users.email FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id = %(user_id)s GROUP BY users.id, users.username, users.id, users.name, users.surname, users.email", user_id=user[0]['id'])
+    print(profilestats)
     reviews = db_execute("SELECT reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist, COUNT(likes.id) AS total_likes FROM reviews LEFT JOIN likes ON likes.review_id = reviews.id WHERE reviews.user_id=%(user_id)s GROUP BY reviews.id, reviews.review_content, reviews.rating, reviews.cover_img_url, reviews.song_title, reviews.artist", user_id=user[0]['id'])
     for review in reviews:
         if session.get('user_id'):
@@ -352,7 +356,7 @@ def other_user_profile(username):
         else:
             review["liked"] = False
 
-    return render_template("usersProfile.html", username=user[0]['username'], reviews=reviews)
+    return render_template("usersProfile.html", userstats=profilestats, reviews=reviews)
 
 
 @app.route('/forgot_password', methods=["GET"])
