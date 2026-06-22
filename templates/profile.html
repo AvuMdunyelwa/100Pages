@@ -36,7 +36,7 @@
                 <div id="user-stats" style="color: rgb(225, 225, 225); font-weight: 500; font-size: 1rem;">
                     <span>{{userstats[0].total_reviews}} Reviews</span> <span> | </span> <span>{{userstats[0].total_likes}} Likes</span>
                 </div>
-                <button class="profile-btn btn btn-primary btn" type="submit" method="get" data-bs-toggle="modal" data-bs-target="#editProfileModal" data-bs-userId="{{userstats[0].user_id}}"
+                <button class="profile-btn btn btn-primary btn" type="submit" method="get" data-bs-toggle="modal" data-bs-target="#editProfileModal"
                     data-bs-username="{{userstats[0].username}}" data-bs-name="{{userstats[0].name}}" data-bs-surname="{{userstats[0].surname}}" data-bs-email="{{userstats[0].email}}" data-bs-profileImg="{{userstats[0].profile_pic}} style="background-color: #67BAF4;">
                     Edit Profile
                 </button>
@@ -146,7 +146,6 @@
                             <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn" style="background-color: #67BAF4; color: white;">Save</button>
                         </div>
-                        <input type="hidden" name="user_id" value='' id="userId" />
                         <input type="hidden" name="username" value='' id="username" />
                         <input type="hidden" name="name" value='' id="name" />
                         <input type="hidden" name="surname" value='' id="surname" />

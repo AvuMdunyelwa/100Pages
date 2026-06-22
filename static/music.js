@@ -71,7 +71,6 @@ function getAttributes(element) {
     const surname = element.getAttribute("data-bs-surname");
     const username = element.getAttribute("data-bs-username");
     const email = element.getAttribute("data-bs-email");
-    const userId = element.getAttribute("data-bs-userId");
     return {songTitle, reviewId, songArtist, reviewContent, rating, coverImg, trackId, email, name, surname, username};
 }
 
@@ -114,10 +113,10 @@ document.addEventListener("show.bs.modal", function(event) {
     }else if (modal.id === 'editProfileModal') {
         if (modal) {
             const clickedBtn = event.relatedTarget;
-            const {email, name, surname, username, userId} = getAttributes(clickedBtn);
-            console.log(name,email,username,surname,userId)
+            const {email, name, surname, username} = getAttributes(clickedBtn);
+            console.log(name,email,username,surname)
             const form = modal.querySelector(".edit-profile");
-            form.querySelector("#userid").value = userId;
+            
             form.querySelector("#name").value = name;
             form.querySelector("#username").value = username;
             form.querySelector("#surname").value = surname;
