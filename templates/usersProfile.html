@@ -9,7 +9,7 @@
         {% endif %}
         <div id="user-profile-info" style=" margin: 2rem; display: flex; align-items: center; height: 17%; width: 50%; gap: 1em;">
         {% if profilestats[0].profile_pic is not none %}
-            <div style="display: block; height: 21vh; width: 10vw; border-radius: 60px; background-position: center; background-image: url('{{profilestats[0].profile_pic}}'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
+            <div class="pp" style="display: block; height: 21vh; width: 10vw; border-radius: 60px; background-position: center; background-image: url('{{profilestats[0].profile_pic}}'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
             </div>
         {% else %}
             <div class="pp" style="display: block; height: 21vh; width: 10vw; border-radius: 60px; background-position: center; background-image: url('/static/profile_placeholder.png'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
@@ -20,13 +20,13 @@
                     {{profilestats[0].username}}
                 </h5>
                 <div id="user-stats" style="color: rgb(225, 225, 225); font-weight: 500; font-size: 1rem;">
-                    <span>{{profilestats[0].total_reviews}} Reviews</span> <span style="border-left: 1px solid grey;"> </span> <span> {{profilestats[0].total_likes}} Likes</span>
-                </div>
+                    <span>{{profilestats[0].total_reviews}} Reviews</span>|<span style="padding: 0 0.2em;"></span><span>{{profilestats[0].total_likes}} Likes</span>
+                </div> 
             </aside>
         </div>
         {% if reviews %}
                 <div class="container-fluid" style="color: white;">
-                    <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="row w-100 d-grid gap-2" style="grid-template-columns: repeat(2, 1fr); border-top: 1px solid grey;">
                         {% for review in reviews %}
                         <div class="col" id='review' style="display: flex; gap: 1em; padding: 1em; border-bottom: 0.5px solid grey; align-items: flex-start;">
                             <div class='song-cover' style="background-image: url('{{ review.cover_img_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat;">
