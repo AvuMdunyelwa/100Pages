@@ -115,7 +115,7 @@ document.addEventListener("show.bs.modal", function(event) {
         if (modal) {
             const clickedBtn = event.relatedTarget;
             const {email, name, surname, username, userId} = getAttributes(clickedBtn);
-    
+            console.log(name,email,username,surname,userId)
             const form = modal.querySelector(".edit-profile");
             form.querySelector("#userid").value = userId;
             form.querySelector("#name").value = name;
