@@ -356,7 +356,7 @@ def other_user_profile(username):
         else:
             review["liked"] = False
 
-    return render_template("usersProfile.html", userstats=profilestats, reviews=reviews)
+    return render_template("usersProfile.html", profilestats=profilestats, reviews=reviews)
 
 
 @app.route('/forgot_password', methods=["GET"])
