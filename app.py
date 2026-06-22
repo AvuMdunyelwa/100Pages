@@ -470,5 +470,5 @@ def edit_profile():
     if not user_email:
         return redirect(f"/account?message=invalid email")
 
-    db_execute("UPDATE users SET username=%(username)%, name=%(name)s, surname=%(surname)s, email=%(email)% WHERE id=%(id)s", username=user_username, name=user_name, surname=user_surname, email=user_email, id=user_id)
+    db_execute("UPDATE users SET username=%(username)s, name=%(name)s, surname=%(surname)s, email=%(email)s WHERE id=%(id)s", username=user_username, name=user_name, surname=user_surname, email=user_email, id=user_id)
     return redirect(f"/account?message=Details updated")
