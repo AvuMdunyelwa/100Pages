@@ -112,15 +112,17 @@ document.addEventListener("show.bs.modal", function(event) {
             form.querySelector("#trackImg").value = coverImg;
          }
     }else if (modal.id === 'editProfileModal') {
-        const clickedBtn = event.relatedTarget;
+        if (modal) {
+            const clickedBtn = event.relatedTarget;
             const {email, name, surname, username, userId} = getAttributes(clickedBtn);
-
+    
             const form = modal.querySelector(".edit-profile");
             form.querySelector("#userid").value = userId;
             form.querySelector("#name").value = name;
             form.querySelector("#username").value = username;
             form.querySelector("#surname").value = surname;
             form.querySelector("#email").value = email;
+        }
     }
 })
 
