@@ -455,9 +455,9 @@ def edit_profile():
     user_surname = request.form.get("surname")
     user_username = request.form.get("username")
     user_email = request.form.get("email")
-   
+    print('user-details: ', user_id, user_name, user_surname, user_username, user_email)
     user_details = db_execute("SELECT * FROM users WHERE id=%(user_id)s", user_id=user_id)
-
+    print('current user details: ', user_details)
     if not user_details:
         return redirect("/account")
     
