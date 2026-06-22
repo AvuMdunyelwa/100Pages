@@ -458,11 +458,17 @@ def edit_profile():
     print('user-details: ', user_id, user_name, user_surname, user_username, user_email)
     user_details = db_execute("SELECT * FROM users WHERE id=%(user_id)s", user_id=user_id)
     print('current user details: ', user_details)
+
     if not user_details:
-        return redirect("/account")
-    
-    if not user_name or user_surname or user_username or user_email :
-        return redirect("/account")
+        return redirect(f"/account?message=user do not exist")
+    if not user_name:
+        return redirect(f"/account?message=invalid name")
+    if not user_username:
+        return redirect(f"/account?message=invalid username")
+    if not user_surname:
+        return redirect(f"/account?message=invalid surname")
+    if not user_email:
+        return redirect(f"/account?message=invalid email")
 
     db_execute("UPDATE users SET name=%(name)s, surname=%(surname)s, username=%(username)%, email=%(email)% WHERE id=%(id)s", name=user_name, surname=user_surname, username=user_username, email=user_email, id=user_id)
     return redirect(f"/account?message=Details updated")
