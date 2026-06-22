@@ -114,7 +114,8 @@
                     </form>
                 </div>
             </div>
-             <!-- edit profile Modal -->
+    
+            <!-- edit profile Modal -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form class="modal-content edit-review" action="/edit-profile" method="post">
@@ -123,14 +124,10 @@
                         </div>
                         <div class="modal-body m-0 mx-100 d-grid">
                             <div class="mb-3 w-100 m-0">
-                                <form action="/store-pp" method="post" class="pp" enctype="multipart/form-data" style="display: block; height: 22vh; width: 11vw; border-radius: 60px; background-position: center; background-image: url('static/profile-placeholder.png'); background-size: cover; display: grid; align-items: center; justify-content: center; justify-items: center;">
-                                    <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
-                                        <!-- Hidden file input -->
-                                        <input type="file" name="addprofile" id="add-pp-input" accept="image/*" onchange="this.form.submit()" style="display: none !important;">
-                                        <!-- Only visible element -->
-                                        <img src="/static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
-                                    </label>
-                                </form>
+                                <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
+                                    <!-- Only visible element -->
+                                    <img src="/static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
+                                </label>
                             </div>
                             <div class="mb-3 w-100 m-0">
                                 <input type="text" class="form-control h-50" autocomplete='off' name="username" id="name" placeholder="Enter username">
