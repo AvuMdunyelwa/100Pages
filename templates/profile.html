@@ -36,8 +36,8 @@
                 <div id="user-stats" style="color: rgb(225, 225, 225); font-weight: 500; font-size: 1rem;">
                     <span>{{userstats[0].total_reviews}} Reviews</span> <span> | </span> <span>{{userstats[0].total_likes}} Likes</span>
                 </div>
-                <button class="profile-btn btn btn-primary btn" type="submit" method="get" data-bs-toggle="modal" data-bs-target="#editProfileModal" data-bs-id="{{userstats.user_id}}"
-                    data-bs-username="{{userstats.username}}" data-bs-name="{{userstats.name}}" data-bs-surname="{{userstats.surname}}" data-bs-profileImg="{{userstats.profile_pic}} style="background-color: #67BAF4;">
+                <button class="profile-btn btn btn-primary btn" type="submit" method="get" data-bs-toggle="modal" data-bs-target="#editProfileModal" data-bs-userId="{{userstats[0].user_id}}"
+                    data-bs-username="{{userstats[0].username}}" data-bs-name="{{userstats[0].name}}" data-bs-surname="{{userstats[0].surname}}" data-bs-email="{{userstats[0].email}}" data-bs-profileImg="{{userstats[0].profile_pic}} style="background-color: #67BAF4;">
                     Edit Profile
                 </button>
             </aside>
@@ -118,26 +118,24 @@
             <!-- edit profile Modal -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
-                    <form class="modal-content edit-review" action="/edit-profile" method="post">
+                    <form class="modal-content edit-profile" action="/edit-profile" method="post">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLongTitle">Edit Profile</h5>
                         </div>
                         <div class="modal-body m-0 mx-100 d-grid">
                             <div class="mb-3 w-100 m-0">
-                                <label for="add-pp-input" style="cursor: pointer; height: 100%; width: 100%; align-items: center; justify-content: center; display: none;">
-                                    <!-- Only visible element -->
-                                    <img src="/static/plus.svg" class="add-pp img-fluid" alt="add-icon" style="max-width: 60%; height: 60%;">
-                                </label>
-                            </div>
-                            <div class="mb-3 w-100 m-0">
-                                <input type="text" class="form-control h-50" autocomplete='off' name="username" id="name" placeholder="Enter username">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" autocomplete='off' name="username" id="name" placeholder="Enter username">
                             </div>
                             <div class="mb-3 w-100 m-0" style="display: flex; gap: 0.5em;">
-                                <input type="text" class="form-control h-50" autocomplete='off' name="name" id="name" placeholder="Enter name">
-                                <input type="text" class="form-control h-50" autocomplete='off' name="surname" id="surname" placeholder="Enter surname">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" autocomplete='off' name="name" id="name" placeholder="Enter name">
+                                <label for="surname">Surname</label>
+                                <input type="text" class="form-control" autocomplete='off' name="surname" id="surname" placeholder="Enter surname">
                             </div>
                             <div class="mb-3 w-100 m-0">
-                                <input type="text" class="form-control h-50" autocomplete='off' name="email" id="surname" placeholder="Enter email">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" autocomplete='off' name="email" id="surname" placeholder="Enter email">
                             </div>
                         </div>
                         <div class="modal-footer">

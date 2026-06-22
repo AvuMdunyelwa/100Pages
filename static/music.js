@@ -58,7 +58,7 @@ if (confirmPassword) {
 
 
 
-// passing the song review data form & pre-filling the form for editing review
+// passing the data form & pre-filling the form for editing
 function getAttributes(element) {
     const songTitle = element.getAttribute("data-bs-title");
     const reviewId = element.getAttribute("data-bs-id");
@@ -67,7 +67,12 @@ function getAttributes(element) {
     const rating = element.getAttribute("data-bs-rating");
     const coverImg = element.getAttribute("data-bs-img");
     const trackId = element.getAttribute("data-bs-trackid");
-    return {songTitle, reviewId, songArtist, reviewContent, rating, coverImg, trackId};
+    const name = element.getAttribute("data-bs-name");
+    const surname = element.getAttribute("data-bs-surname");
+    const username = element.getAttribute("data-bs-username");
+    const email = element.getAttribute("data-bs-email");
+    const userId = element.getAttribute("data-bs-userId");
+    return {songTitle, reviewId, songArtist, reviewContent, rating, coverImg, trackId, email, name, surname, username};
 }
 
 document.addEventListener("show.bs.modal", function(event) {
@@ -106,6 +111,16 @@ document.addEventListener("show.bs.modal", function(event) {
             form.querySelector("#trackArtist").value = songArtist;
             form.querySelector("#trackImg").value = coverImg;
          }
+    }else if (modal.id === 'editProfileModal') {
+        const clickedBtn = event.relatedTarget;
+            const {email, name, surname, username, userId} = getAttributes(clickedBtn);
+
+            const form = modal.querySelector(".edit-profile");
+            form.querySelector("#userid").value = userId;
+            form.querySelector("#name").value = name;
+            form.querySelector("#username").value = username;
+            form.querySelector("#surname").value = surname;
+            form.querySelector("#email").value = email;
     }
 })
 

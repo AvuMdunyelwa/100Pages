@@ -221,7 +221,7 @@ def store_review():
                                recipient_id=user_id, sender_id=user_id, type='added_review', review_id=review_id[0]['id'], is_read=False)
     
  
-    return redirect(f"/account?message='review successfully added!'")
+    return redirect(f"/account?message=review successfully added!")
 
 
 @app.route("/account", methods=["GET"])
@@ -417,7 +417,7 @@ def get_activity():
         db_execute('UPDATE notifications SET is_read=%(read)s WHERE id=%(id)s', read="True", id=activity['id'])
 
     return render_template('notifications.html', notifications=notifications)
-    
+   
 @app.route('/store-pp', methods=["POST"])
 @login_required
 def store_profile_pic():
@@ -443,3 +443,26 @@ def store_profile_pic():
         return redirect('/account')
     else:
         return redirect(url_for('profile', message='image failed to upload'))
+
+
+@app.route("/edit-profile", methods=["POST"])
+@login_required
+def edit_profile():
+    """ update users details """
+
+    user_id = session["user_id"]
+    user_name = request.form.get("name")
+    user_surname = request.form.get("surname")
+    user_username = request.form.get("username")
+    user_email = request.form.get("email")
+   
+    user_details = db_execute("SELECT * FROM users WHERE user_id=%(user_id)s", user_id=user_id)
+
+    if not user_details:
+        return redirect("/account")
+    
+    if not user_name or user_surname or user_username or user_email :
+        return redirect("/account")
+
+    db_execute("UPDATE users SET name=%(name)s, surname=%(surname)s, username=%(username)%, email=%(email)% WHERE id=%(id)s", name=user_name, surname=user_surname, username=user_username, email=user_email, id=user_id)
+    return redirect(f"/account?message=Details updated")
