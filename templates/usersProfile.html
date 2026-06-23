@@ -26,7 +26,7 @@
         </div>
         {% if reviews %}
                 <div class="container" style="color: white; background-color: #67BAF4; border-radius: 20px;">
-                    <div class="row d-grid gap-2" style="grid-template-columns: repeat(2, 1fr); border-top: 1px solid grey;">
+                    <div class="row d-grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
                         {% for review in reviews %}
                         <div class="col" id='review' style="display: flex; gap: 1em; padding: 1em; border-bottom: 0.5px solid grey; align-items: flex-start;">
                             <div class='song-cover' style="background-image: url('{{ review.cover_img_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat;">
