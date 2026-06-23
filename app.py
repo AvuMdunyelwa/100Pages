@@ -404,7 +404,7 @@ def subscribe():
     if not email:
         return redirect('/?message=Please provide a valid email')
 
-    db_execute("INSERT INTO newsletter(user_id, email) VALUES(%(user_id)s, %(email)s)", user_id=user_id, email=email)
+    db_execute("INSERT INTO newsLetter(user_id, user_email) VALUES(%(user_id)s, %(email)s)", user_id=user_id, user_email=email)
     return redirect('/?message=Thank you for subscribing to the newsletter')
 
 @app.route('/activity', methods=["GET"])
