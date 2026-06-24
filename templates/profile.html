@@ -44,8 +44,10 @@
         </div>
         {% if reviews %}
             <h6>Playlist of the week</h6>
-                <div class="container">
-                    no songs added
+                <div class="container"> 
+                    <button class="profile-btn btn btn-primary btn" type="submit" data-bs-toggle="modal" data-bs-target="#addPlaylistModal" style="background-color: #67BAF4;">
+                        Add Playlist
+                    </button>
                 </div>
             <h6>Reviews</h6>
                 <div class="container" style="color: white; background-color: #67BAF4; border-radius: 20px;">
@@ -158,4 +160,46 @@
                     </form>
                 </div>
             </div>
+
+            <!-- add playlist modal -->
+             <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form class="modal-content add-playlist" action="/add-playlist" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">New Playlist</h5>
+                        </div>
+                        <div class="modal-body m-0 mx-100 d-grid">
+                            <div class="mb-3 w-100 m-0">
+                                <label for="username">Name</label>
+                                <input type="text" class="form-control" autocomplete='off' name="username" id="name" placeholder="e.g spaghetti on your plate">
+                            </div>
+                            <div class="mb-3 w-100 m-0">
+                                <label for="email">Tags</label>
+                                <input type="text" class="form-control" autocomplete='off' name="email" id="email" placeholder="e.g rap kpop funk">
+                            </div>
+                            <div class="mb-3 w-100 m-0">
+                                <label for="email">Who can see</label>
+                                <select name="songs" id="playlist">
+                                    <option value="public">Public</option>
+                                    <option value="public">Private (you only)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 w-100 m-0">
+                                <label for="add-songs">Add songs</label>
+                                <div class="d-flex">
+                                    <input type="text" class="form-control" autocomplete='off' name="artist" id="artist" placeholder="e.g beyonce">
+                                    <input type="text" class="form-control" autocomplete='off' name="song_title" id="song-title" placeholder="e.g single ladies">
+                                </div>
+                                <div>
+                                    no song added
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn" style="background-color: #67BAF4; color: white;">Save</button>
+                        </div>
+                    </form>
+                </div>
+             </div>
 {% endblock %}
