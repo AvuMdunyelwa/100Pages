@@ -86,7 +86,8 @@ def after_request(response):
 @app.route('/')
 def landing_page():
     message = request.args.get('message')
-    popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating, COUNT(*) AS review_count FROM reviews WHERE created_at >= NOW() - INTERVAL '7 days' GROUP BY track_id ORDER BY review_count DESC, AVG(rating) DESC LIMIT 5")
+    
+    popular_songs = db_execute("SELECT track_id, MAX(cover_img_url) AS cover_img_url, AVG(rating) AS average_rating, COUNT(*) AS review_count FROM reviews GROUP BY track_id ORDER BY review_count DESC, AVG(rating) DESC LIMIT 5")
     reviews = db_execute("SELECT reviews.id AS review_id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img AS profile_pic, COUNT(likes.review_id) AS total_likes FROM reviews JOIN users ON users.id = reviews.user_id LEFT JOIN likes ON reviews.id = likes.review_id GROUP BY reviews.id, reviews.song_title, reviews.artist, reviews.review_content, reviews.rating, reviews.cover_img_url, users.username, users.profile_img ORDER BY total_likes DESC LIMIT 10")
 
     if session.get('user_id'):
